@@ -1,0 +1,82 @@
+version: '3'
+
+dotenv: ['.env']
+
+vars:
+  GO_VERSION: '1.26.5'
+  GOLANGCI_LINT_VERSION: 'v2.12.2'
+
+  BIN_DIR: '{{.ROOT_DIR}}/bin'
+  GOLANGCI_LINT: '{{.BIN_DIR}}/golangci-lint'
+  
+  LOGGER_LEVEL: DEBUG
+
+  PROJECT_ROOT:
+    sh: |
+      if [ "$(go env GOOS)" = "windows" ]; then
+        powershell -c "(Get-Location).Path -replace '\\\\', '/'"
+      else
+        pwd
+      fi
+
+env:
+  PROJECT_ROOT: '{{.PROJECT_ROOT}}'
+
+tasks:
+  install-golangci-lint:
+    cmds:
+     - |
+      [ -f  {{.GOLANGCI_LINT}} ] || {
+        mkdir -p {{.BIN_DIR}}
+        echo "installing golangci-lint {{.GOLANGCI_LINT_VERSION}}"
+        GOBIN={{.BIN_DIR}} go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}}
+      }
+    status:
+      - test -x {{.GOLANGCI_LINT}}
+
+  lint:
+    deps: [ install-golangci-lint ]
+    cmds:
+      - '{{.GOLANGCI_LINT}} run ./... --config=.golangci.yml'
+
+  run:
+    cmds:
+      - go run ./cmd/app/main.go
+    env:
+      LOGGER_LEVEL: '{{.LOGGER_LEVEL}}'
+      LOGGER_FOLDER: '{{.LOGGER_FOLDER | default "./out/logs/"}}'
+
+  run-example:
+    cmds:
+      - go run ./example/main.go
+    env:
+      LOGGER_LEVEL: '{{.LOGGER_LEVEL}}'
+      LOGGER_FOLDER: '{{.LOGGER_FOLDER | default "./out/logs/"}}'
+
+  migrate-create:
+    cmds:
+      - goose postgres "host={{.POSTGRES_HOST}} user={{.POSTGRES_USER}} database={{.POSTGRES_DB}} password={{.POSTGRES_PASSWORD}} sslmode=disable" -dir {{.PROJECT_ROOT}}/migrations create {{.NAME}} sql
+
+  migrate-status:
+    cmds:
+      - goose postgres "host=${POSTGRES_HOST} user=${POSTGRES_USER} database=${POSTGRES_DB} password=${POSTGRES_PASSWORD} sslmode=disable" -dir ${PROJECT_ROOT}/migrations status
+
+  migrate-up:
+    cmds:
+      - goose postgres "host=${POSTGRES_HOST} user=${POSTGRES_USER} database=${POSTGRES_DB} password=${POSTGRES_PASSWORD} sslmode=disable" -dir ${PROJECT_ROOT}/migrations up
+
+  migrate-down:
+    cmds:
+      - goose postgres "host=${POSTGRES_HOST} user=${POSTGRES_USER} database=${POSTGRES_DB} password=${POSTGRES_PASSWORD} sslmode=disable" -dir ${PROJECT_ROOT}/migrations down
+
+  env-up:
+    cmds:
+      - docker compose up -d postgres
+
+  env-down:
+    cmds:
+      - docker compose down postgres
+
+  swagger:
+    cmds:
+      - docker compose run --rm swagger init -g cmd/app/main.go -o docs --parseInternal --parseDependency
