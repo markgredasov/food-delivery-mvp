@@ -19,6 +19,13 @@ services:
       timeout: 5s
       retries: 5
 
+  swagger:
+    build: 
+      context: ${PROJECT_ROOT}
+      dockerfile: docs/Dockerfile
+    volumes:
+      - ${PROJECT_ROOT}:/code
+
 networks:
   avito-kitchen-network:
     driver: bridge

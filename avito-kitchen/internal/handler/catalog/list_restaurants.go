@@ -7,7 +7,15 @@ import (
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/response"
 )
 
-// ListRestaurants handles GET /restaurants.
+// ListRestaurants godoc
+// @Summary Список активных заведений
+// @Description Возвращает список активных заведений
+// @Tags catalog
+// @Accept json
+// @Produce json
+// @Success 200 {object} RestaurantsDTOResponse "Список зведений"
+// @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router /restaurants [get]
 func (h *handler) ListRestaurants(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)

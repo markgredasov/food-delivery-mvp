@@ -11,6 +11,20 @@ import (
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/app"
 )
 
+// @title           Avito Kitchen API
+// @version         1.0.0
+// @description     MVP API агрегатора доставки еды «Авито.Кухня».
+// @host            localhost:8080
+// @BasePath        /api/v1
+
+// @Tag.name        catalog
+// @Tag.description Каталог заведений, меню, категорий (пользовательская часть).
+
+// @Tag.name        orders
+// @Tag.description Заказы (пользовательская часть).
+
+// @Tag.name        restaurant
+// @Tag.description API для заведений.
 func main() {
 	ctx, cancel := signal.NotifyContext(
 		context.Background(),

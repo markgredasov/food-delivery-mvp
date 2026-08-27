@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -55,6 +56,10 @@ func Logger(l *logger.Logger) Middleware {
 func Recovery() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if strings.HasPrefix(r.URL.Path, "/swagger/") {
+				next.ServeHTTP(w, r)
+				return
+			}
 			ctx := r.Context()
 			logger := logger.FromContext(ctx)
 			responseHandler := response.NewHTTPResponseHandler(logger, w)
@@ -76,6 +81,10 @@ func Recovery() Middleware {
 func Trace() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if strings.HasPrefix(r.URL.Path, "/swagger/") {
+				next.ServeHTTP(w, r)
+				return
+			}
 			ctx := r.Context()
 			logger := logger.FromContext(ctx)
 

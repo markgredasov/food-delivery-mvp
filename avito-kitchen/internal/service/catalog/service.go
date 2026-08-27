@@ -12,6 +12,7 @@ type service struct {
 
 type RestaurantRepository interface {
 	ListActive(ctx context.Context) ([]restaurant.Restaurant, error)
+	GetByID(ctx context.Context, restaurantID string) (restaurant.Restaurant, error)
 }
 
 func New(restaurants RestaurantRepository) *service {

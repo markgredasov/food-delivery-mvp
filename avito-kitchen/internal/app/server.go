@@ -20,5 +20,6 @@ func (a *App) initHTTPServer(routes []server_http.Route) {
 		middleware.CORS(),
 	)
 	server.RegisterAPIRouters(apiVersion1Router)
+	server.RegisterSwagger()
 	a.server = server
 }

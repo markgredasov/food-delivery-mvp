@@ -14,6 +14,7 @@ type handler struct {
 
 type catalogService interface {
 	ListActiveRestaurants(ctx context.Context) ([]restaurant.Restaurant, error)
+	GetRestaurant(ctx context.Context, restaurantID string) (restaurant.Restaurant, error)
 }
 
 func New(service catalogService) *handler {
@@ -28,6 +29,11 @@ func (h *handler) Routes() []server_http.Route {
 			Method:  http.MethodGet,
 			Path:    "/restaurants",
 			Handler: h.ListRestaurants,
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/restaurants/{id}",
+			Handler: h.GetRestaurant,
 		},
 	}
 }

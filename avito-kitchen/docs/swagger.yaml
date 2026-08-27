@@ -1,0 +1,115 @@
+basePath: /api/v1
+definitions:
+  github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails:
+    properties:
+      err:
+        type: string
+      message:
+        type: string
+    type: object
+  ? github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse
+  : properties:
+      error:
+        $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails'
+    type: object
+  internal_handler_catalog.AddressDTOResponse:
+    properties:
+      apartment:
+        type: string
+      city:
+        type: string
+      comment:
+        type: string
+      house:
+        type: string
+      street:
+        type: string
+    type: object
+  internal_handler_catalog.RestaurantDTOResponse:
+    properties:
+      address:
+        $ref: '#/definitions/internal_handler_catalog.AddressDTOResponse'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  internal_handler_catalog.RestaurantsDTOResponse:
+    properties:
+      restaurants:
+        items:
+          $ref: '#/definitions/internal_handler_catalog.RestaurantDTOResponse'
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: MVP API агрегатора доставки еды «Авито.Кухня».
+  title: Avito Kitchen API
+  version: 1.0.0
+paths:
+  /restaurants:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список активных заведений
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список зведений
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.RestaurantsDTOResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Список активных заведений
+      tags:
+      - catalog
+  /restaurants/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает информацию о заведении
+      parameters:
+      - description: Идентификатор заведения
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о заведении
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.RestaurantDTOResponse'
+        "400":
+          description: Невалидный запрос (неправильный формат UUID ресторана)
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заведение не найдено
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Детали заведения
+      tags:
+      - catalog
+swagger: "2.0"
+tags:
+- description: Каталог заведений, меню, категорий (пользовательская часть).
+  name: catalog
+- description: Заказы (пользовательская часть).
+  name: orders
+- description: API для заведений.
+  name: restaurant
