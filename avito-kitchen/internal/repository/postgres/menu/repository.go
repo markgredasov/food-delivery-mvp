@@ -19,7 +19,8 @@ func New(pool database_postgres.Pool) *repository {
 
 func scanMenuItem(row pgx.Row) (menu.MenuItem, error) {
 	var r record
-	err := row.Scan(&r.ID, &r.RestaurantID, &r.CategoryID, &r.CategoryName, &r.Name, &r.Description, &r.Price, &r.Available)
+	err := row.Scan(&r.ID, &r.RestaurantID, &r.CategoryID, &r.CategoryName,
+		&r.Name, &r.Description, &r.Price, &r.Available, &r.CreatedAt, &r.UpdatedAt)
 	if err != nil {
 		return menu.MenuItem{}, errs.Internal("scan menu item", err)
 	}

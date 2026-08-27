@@ -62,14 +62,25 @@ type CategoryDTO struct {
 	Name string `json:"name"`
 }
 
-func toCategory(m *menu.Category) *CategoryDTO {
-	if m == nil {
-		return nil
-	}
-
-	return &CategoryDTO{
+func toCategory(m menu.Category) CategoryDTO {
+	return CategoryDTO{
 		ID:   m.ID.String(),
 		Name: m.Name,
+	}
+}
+
+type CategoriesDTO struct {
+	Categories []CategoryDTO `json:"categories"`
+}
+
+func toCategories(m []menu.Category) CategoriesDTO {
+	out := make([]CategoryDTO, len(m))
+	for i := range m {
+		out[i] = toCategory(m[i])
+	}
+
+	return CategoriesDTO{
+		Categories: out,
 	}
 }
 
@@ -88,10 +99,16 @@ type MenuItemsDTO struct {
 }
 
 func toMenuItem(m menu.MenuItem) MenuItemDTO {
+	var category *CategoryDTO
+	if m.Category != nil {
+		c := toCategory(*m.Category)
+		category = &c
+	}
+
 	return MenuItemDTO{
 		ID:           m.ID.String(),
 		RestaurantID: m.RestaurantID.String(),
-		Category:     toCategory(m.Category),
+		Category:     category,
 		Name:         m.Name,
 		Description:  m.Description,
 		Price:        m.Price.String(),

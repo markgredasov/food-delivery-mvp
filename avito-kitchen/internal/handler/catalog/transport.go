@@ -17,6 +17,7 @@ type catalogService interface {
 	ListActiveRestaurants(ctx context.Context) ([]restaurant.Restaurant, error)
 	GetRestaurant(ctx context.Context, restaurantID string) (restaurant.Restaurant, error)
 	GetMenu(ctx context.Context, restaurantID string) ([]menu.MenuItem, error)
+	ListCategories(ctx context.Context) ([]menu.Category, error)
 }
 
 func New(service catalogService) *handler {
@@ -41,6 +42,11 @@ func (h *handler) Routes() []server_http.Route {
 			Method:  http.MethodGet,
 			Path:    "/restaurants/{id}/menu",
 			Handler: h.GetMenu,
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/categories",
+			Handler: h.ListCategories,
 		},
 	}
 }
