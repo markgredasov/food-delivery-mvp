@@ -2,6 +2,7 @@ package menu
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,6 +14,18 @@ import (
 type Category struct {
 	ID   uuid.UUID
 	Name string
+}
+
+// NewCategory validates and builds new Category.
+func NewCategory(id uuid.UUID, name string) (Category, error) {
+	trimmedName := strings.TrimSpace(name)
+	if trimmedName == "" {
+		return Category{}, errs.InvalidArgument("category name must not be empty")
+	}
+	return Category{
+		ID:   id,
+		Name: trimmedName,
+	}, nil
 }
 
 // MenuItem is a single dish/product belonging to a restaurant.
@@ -58,22 +71,4 @@ func (m MenuItem) EnsureAvailable() error {
 // BelongsTo reports whether the item belongs to the given restaurant.
 func (m MenuItem) BelongsTo(restaurantID uuid.UUID) bool {
 	return m.RestaurantID == restaurantID
-}
-
-// Menu is a list of products belonging to restaurant.
-type Menu struct {
-	RestaurantID uuid.UUID
-	Items        []MenuItem
-}
-
-// NewMenu validates and builds new Menu from MenuItems.
-func NewMenu(items []MenuItem) (Menu, error) {
-	if len(items) == 0 {
-		return Menu{}, errs.InvalidArgument("no items")
-	}
-
-	return Menu{
-		RestaurantID: items[0].RestaurantID,
-		Items:        items,
-	}, nil
 }

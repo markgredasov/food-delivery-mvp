@@ -7,5 +7,5 @@ import (
 )
 
 func (s *service) ListActiveRestaurants(ctx context.Context) ([]restaurant.Restaurant, error) {
-	return s.restaurants.ListActive(ctx)
+	return s.restaurant.ListActive(ctx)
 }

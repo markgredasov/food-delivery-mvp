@@ -32,7 +32,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Список зведений",
                         "schema": {
-                            "$ref": "#/definitions/internal_handler_catalog.RestaurantsDTOResponse"
+                            "$ref": "#/definitions/internal_handler_catalog.RestaurantsDTO"
                         }
                     },
                     "500": {
@@ -71,7 +71,58 @@ const docTemplate = `{
                     "200": {
                         "description": "Информация о заведении",
                         "schema": {
-                            "$ref": "#/definitions/internal_handler_catalog.RestaurantDTOResponse"
+                            "$ref": "#/definitions/internal_handler_catalog.RestaurantDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Невалидный запрос (неправильный формат UUID ресторана)",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Заведение не найдено",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/restaurants/{id}/menu": {
+            "get": {
+                "description": "Возвращает меню заведения",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "catalog"
+                ],
+                "summary": "Меню заведения",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Идентификатор заведения",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Меню заведения",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handler_catalog.MenuItemsDTO"
                         }
                     },
                     "400": {
@@ -116,7 +167,7 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_handler_catalog.AddressDTOResponse": {
+        "internal_handler_catalog.AddressDTO": {
             "type": "object",
             "properties": {
                 "apartment": {
@@ -136,11 +187,59 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_handler_catalog.RestaurantDTOResponse": {
+        "internal_handler_catalog.CategoryDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_handler_catalog.MenuItemDTO": {
+            "type": "object",
+            "properties": {
+                "available": {
+                    "type": "boolean"
+                },
+                "category": {
+                    "$ref": "#/definitions/internal_handler_catalog.CategoryDTO"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                },
+                "restaurant_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_handler_catalog.MenuItemsDTO": {
+            "type": "object",
+            "properties": {
+                "menu_items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_handler_catalog.MenuItemDTO"
+                    }
+                }
+            }
+        },
+        "internal_handler_catalog.RestaurantDTO": {
             "type": "object",
             "properties": {
                 "address": {
-                    "$ref": "#/definitions/internal_handler_catalog.AddressDTOResponse"
+                    "$ref": "#/definitions/internal_handler_catalog.AddressDTO"
                 },
                 "description": {
                     "type": "string"
@@ -156,13 +255,13 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_handler_catalog.RestaurantsDTOResponse": {
+        "internal_handler_catalog.RestaurantsDTO": {
             "type": "object",
             "properties": {
                 "restaurants": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/internal_handler_catalog.RestaurantDTOResponse"
+                        "$ref": "#/definitions/internal_handler_catalog.RestaurantDTO"
                     }
                 }
             }

@@ -7,5 +7,5 @@ import (
 )
 
 func (s *service) GetRestaurant(ctx context.Context, restaurantID string) (restaurant.Restaurant, error) {
-	return s.restaurants.GetByID(ctx, restaurantID)
+	return s.restaurant.GetByID(ctx, restaurantID)
 }

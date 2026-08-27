@@ -12,7 +12,7 @@ definitions:
       error:
         $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails'
     type: object
-  internal_handler_catalog.AddressDTOResponse:
+  internal_handler_catalog.AddressDTO:
     properties:
       apartment:
         type: string
@@ -25,10 +25,41 @@ definitions:
       street:
         type: string
     type: object
-  internal_handler_catalog.RestaurantDTOResponse:
+  internal_handler_catalog.CategoryDTO:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  internal_handler_catalog.MenuItemDTO:
+    properties:
+      available:
+        type: boolean
+      category:
+        $ref: '#/definitions/internal_handler_catalog.CategoryDTO'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+      restaurant_id:
+        type: string
+    type: object
+  internal_handler_catalog.MenuItemsDTO:
+    properties:
+      menu_items:
+        items:
+          $ref: '#/definitions/internal_handler_catalog.MenuItemDTO'
+        type: array
+    type: object
+  internal_handler_catalog.RestaurantDTO:
     properties:
       address:
-        $ref: '#/definitions/internal_handler_catalog.AddressDTOResponse'
+        $ref: '#/definitions/internal_handler_catalog.AddressDTO'
       description:
         type: string
       id:
@@ -38,11 +69,11 @@ definitions:
       status:
         type: string
     type: object
-  internal_handler_catalog.RestaurantsDTOResponse:
+  internal_handler_catalog.RestaurantsDTO:
     properties:
       restaurants:
         items:
-          $ref: '#/definitions/internal_handler_catalog.RestaurantDTOResponse'
+          $ref: '#/definitions/internal_handler_catalog.RestaurantDTO'
         type: array
     type: object
 host: localhost:8080
@@ -63,7 +94,7 @@ paths:
         "200":
           description: Список зведений
           schema:
-            $ref: '#/definitions/internal_handler_catalog.RestaurantsDTOResponse'
+            $ref: '#/definitions/internal_handler_catalog.RestaurantsDTO'
         "500":
           description: Внутренняя ошибка сервера
           schema:
@@ -89,7 +120,7 @@ paths:
         "200":
           description: Информация о заведении
           schema:
-            $ref: '#/definitions/internal_handler_catalog.RestaurantDTOResponse'
+            $ref: '#/definitions/internal_handler_catalog.RestaurantDTO'
         "400":
           description: Невалидный запрос (неправильный формат UUID ресторана)
           schema:
@@ -103,6 +134,40 @@ paths:
           schema:
             $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
       summary: Детали заведения
+      tags:
+      - catalog
+  /restaurants/{id}/menu:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает меню заведения
+      parameters:
+      - description: Идентификатор заведения
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Меню заведения
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.MenuItemsDTO'
+        "400":
+          description: Невалидный запрос (неправильный формат UUID ресторана)
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заведение не найдено
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Меню заведения
       tags:
       - catalog
 swagger: "2.0"

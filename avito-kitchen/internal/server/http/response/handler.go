@@ -34,7 +34,7 @@ func (h *HTTPResponseHandler) JSONResponse(responseBody any, statusCode int) {
 	}
 }
 
-func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
+func (h *HTTPResponseHandler) ErrorResponse(err error) {
 	var (
 		statusCode int
 		logFunc    func(string, ...zap.Field)
@@ -61,9 +61,9 @@ func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 		logFunc = h.log.Error
 	}
 
-	logFunc(msg, zap.Error(err))
+	logFunc(err.Error(), zap.Error(err))
 
-	h.errorResponse(statusCode, err, msg)
+	h.errorResponse(statusCode, err, err.Error())
 }
 
 func (h *HTTPResponseHandler) PanicResponse(p any, msg string) {

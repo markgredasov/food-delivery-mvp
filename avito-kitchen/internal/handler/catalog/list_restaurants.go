@@ -13,7 +13,7 @@ import (
 // @Tags catalog
 // @Accept json
 // @Produce json
-// @Success 200 {object} RestaurantsDTOResponse "Список зведений"
+// @Success 200 {object} RestaurantsDTO "Список зведений"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants [get]
 func (h *handler) ListRestaurants(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +23,7 @@ func (h *handler) ListRestaurants(w http.ResponseWriter, r *http.Request) {
 
 	restaurants, err := h.service.ListActiveRestaurants(ctx)
 	if err != nil {
-		rh.ErrorResponse(err, err.Error())
+		rh.ErrorResponse(err)
 		return
 	}
 	rh.JSONResponse(toRestaurants(restaurants), http.StatusOK)
