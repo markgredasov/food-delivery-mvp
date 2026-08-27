@@ -26,15 +26,14 @@ const (
 // Restaurant is the aggregate root for a food establishment onboarded onto
 // the platform.
 type Restaurant struct {
-	ID           uuid.UUID
-	Name         string
-	Description  *string
-	Address      address.Address
-	DeliveryTime int
-	Status       Status
-	ServiceURL   string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID          uuid.UUID
+	Name        string
+	Description *string
+	Address     address.Address
+	Status      Status
+	ServiceURL  string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // New validates and builds Restaurant.
@@ -58,12 +57,11 @@ func New(id uuid.UUID, name string, description *string, address address.Address
 	}
 
 	restaurant := Restaurant{
-		ID:           id,
-		Name:         name,
-		Address:      address,
-		DeliveryTime: deliveryTime,
-		Status:       status,
-		ServiceURL:   serviceURL,
+		ID:         id,
+		Name:       name,
+		Address:    address,
+		Status:     status,
+		ServiceURL: serviceURL,
 	}
 
 	if description != nil {

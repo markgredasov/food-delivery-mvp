@@ -54,6 +54,9 @@ tasks:
       LOGGER_FOLDER: '{{.LOGGER_FOLDER | default "./out/logs/"}}'
 
   migrate-create:
+    requires:
+      vars:
+        - NAME
     cmds:
       - goose postgres "host={{.POSTGRES_HOST}} user={{.POSTGRES_USER}} database={{.POSTGRES_DB}} password={{.POSTGRES_PASSWORD}} sslmode=disable" -dir {{.PROJECT_ROOT}}/migrations create {{.NAME}} sql
 
@@ -75,7 +78,7 @@ tasks:
 
   env-down:
     cmds:
-      - docker compose down postgres
+      - docker compose down -v postgres
 
   swagger:
     cmds:

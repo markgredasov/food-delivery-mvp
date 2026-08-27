@@ -15,15 +15,6 @@ type Category struct {
 	Name string
 }
 
-// MenuItemStatus are conditions of a MenuItem (available/unavailable).
-type MenuItemStatus string
-
-// Statuses of MenuItem.
-const (
-	MenuItemAvailable   MenuItemStatus = "available"
-	MenuItemUnavailable MenuItemStatus = "unavailable"
-)
-
 // MenuItem is a single dish/product belonging to a restaurant.
 type MenuItem struct {
 	ID           uuid.UUID
@@ -32,7 +23,7 @@ type MenuItem struct {
 	Name         string
 	Description  *string
 	Price        money.Money
-	Status       MenuItemStatus
+	Available    bool
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
@@ -44,13 +35,6 @@ func NewMenuItem(id, restaurantID uuid.UUID, category *Category, name string,
 		return MenuItem{}, errs.InvalidArgument("menu item name must not be empty")
 	}
 
-	var status MenuItemStatus
-	if available {
-		status = MenuItemAvailable
-	} else {
-		status = MenuItemUnavailable
-	}
-
 	return MenuItem{
 		ID:           id,
 		RestaurantID: restaurantID,
@@ -58,14 +42,14 @@ func NewMenuItem(id, restaurantID uuid.UUID, category *Category, name string,
 		Name:         name,
 		Description:  description,
 		Price:        price,
-		Status:       status,
+		Available:    available,
 	}, nil
 }
 
 // EnsureAvailable returns a domain error if the item cannot currently be
 // ordered.
 func (m MenuItem) EnsureAvailable() error {
-	if m.Status == MenuItemUnavailable {
+	if !m.Available {
 		return errs.Conflict(fmt.Sprintf("menu item \"%s\" is not available", m.Name))
 	}
 	return nil
