@@ -1,19 +1,25 @@
 package app
 
-import server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
+import (
+	cataloghandler "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/handler/catalog"
+	restaurantrepo "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/repository/postgres/restaurant"
+	server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
+	catalogservice "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/service/catalog"
+)
 
-func (a *App) initFeatures() ([]server_http.Route, error) {
+func (a *App) initFeatures() []server_http.Route {
 	var routes []server_http.Route
 
-	initFuncs := []func() ([]server_http.Route, error){}
+	catalogRoutes := a.initFeatureCatalog()
+	routes = append(routes, catalogRoutes...)
 
-	for _, initFunc := range initFuncs {
-		featureRoutes, err := initFunc()
-		if err != nil {
-			return routes, err
-		}
-		routes = append(routes, featureRoutes...)
-	}
+	return routes
+}
 
-	return routes, nil
+func (a *App) initFeatureCatalog() []server_http.Route {
+	restaurantRepo := restaurantrepo.New(a.pool)
+	service := catalogservice.New(restaurantRepo)
+	handler := cataloghandler.New(service)
+
+	return handler.Routes()
 }

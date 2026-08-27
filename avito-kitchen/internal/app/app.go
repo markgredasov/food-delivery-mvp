@@ -39,10 +39,7 @@ func (a *App) Run() error {
 	}
 
 	a.logger.Debug("initializing features")
-	routes, err := a.initFeatures()
-	if err != nil {
-		a.logger.Fatal("initialize features", zap.Error(err))
-	}
+	routes := a.initFeatures()
 
 	a.logger.Debug("initializing HTTP server")
 	a.initHTTPServer(routes)

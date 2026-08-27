@@ -1,6 +1,7 @@
 package restaurant
 
 import (
+	"fmt"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -22,6 +23,21 @@ const (
 	RestaurantStatusInactive Status = "inactive"
 	RestaurantStatusBlocked  Status = "blocked"
 )
+
+func NewStatus(s string) (Status, error) {
+	status := Status(s)
+	switch status {
+	case RestaurantStatusActive, RestaurantStatusInactive, RestaurantStatusBlocked:
+		return status, nil
+	}
+
+	return "", errs.InvalidArgument(fmt.Sprintf("status '%s'", s))
+}
+
+// String converts status to string.
+func (s Status) String() string {
+	return string(s)
+}
 
 // Restaurant is the aggregate root for a food establishment onboarded onto
 // the platform.

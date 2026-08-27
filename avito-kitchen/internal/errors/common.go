@@ -12,16 +12,33 @@ var (
 	ErrInvalidRequest  = errors.New("invalid request")
 	ErrNotImplemented  = errors.New("not implemented yet")
 	ErrConflict        = errors.New("conflict")
+	ErrInternal        = errors.New("internal")
 )
 
-func InvalidArgument(msg string) error { return fmt.Errorf("%s: %w", msg, ErrInvalidArgument) }
+func InvalidArgument(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrInvalidArgument)
+}
 
-func NotFound(msg string) error { return fmt.Errorf("%s: %w", msg, ErrNotFound) }
+func NotFound(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrNotFound)
+}
 
-func AlreadyExists(msg string) error { return fmt.Errorf("%s: %w", msg, ErrAlreadyExists) }
+func AlreadyExists(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrAlreadyExists)
+}
 
-func InvalidRequest(msg string) error { return fmt.Errorf("%s: %w", msg, ErrInvalidRequest) }
+func InvalidRequest(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrInvalidRequest)
+}
 
-func NotImplemented(msg string) error { return fmt.Errorf("%s: %w", msg, ErrNotImplemented) }
+func NotImplemented(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrNotImplemented)
+}
 
-func Conflict(msg string) error { return fmt.Errorf("%s: %w", msg, ErrConflict) }
+func Conflict(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrConflict)
+}
+
+func Internal(msg string, err error) error {
+	return fmt.Errorf("%s: %w: %w", msg, err, ErrInternal)
+}

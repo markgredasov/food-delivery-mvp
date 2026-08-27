@@ -29,6 +29,7 @@ type Pool interface {
 	Begin(ctx context.Context) (pgx.Tx, error)
 	OpTimeout() time.Duration
 	WithTx(ctx context.Context, fn func(ctx context.Context) error) error
+	GetQuerier(ctx context.Context) Querier
 }
 
 type txKey struct{}
