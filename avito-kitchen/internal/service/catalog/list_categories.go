@@ -7,5 +7,5 @@ import (
 )
 
 func (s *service) ListCategories(ctx context.Context) ([]menu.Category, error) {
-	return nil, nil
+	return s.category.List(ctx)
 }

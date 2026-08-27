@@ -2,6 +2,7 @@ package app
 
 import (
 	cataloghandler "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/handler/catalog"
+	categoryrepo "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/repository/postgres/category"
 	menurepo "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/repository/postgres/menu"
 	restaurantrepo "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/repository/postgres/restaurant"
 	server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
@@ -20,7 +21,8 @@ func (a *App) initFeatures() []server_http.Route {
 func (a *App) initFeatureCatalog() []server_http.Route {
 	restaurantRepo := restaurantrepo.New(a.pool)
 	menuRepo := menurepo.New(a.pool)
-	service := catalogservice.New(restaurantRepo, menuRepo)
+	categoryRepo := categoryrepo.New(a.pool)
+	service := catalogservice.New(restaurantRepo, menuRepo, categoryRepo)
 	handler := cataloghandler.New(service)
 
 	return handler.Routes()

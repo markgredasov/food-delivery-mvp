@@ -83,6 +83,25 @@ info:
   title: Avito Kitchen API
   version: 1.0.0
 paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список зарегистрированных в сервисе категорий
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о заведении
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.RestaurantDTO'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Список категорий
+      tags:
+      - catalog
   /restaurants:
     get:
       consumes:

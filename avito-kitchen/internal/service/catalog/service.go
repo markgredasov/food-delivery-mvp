@@ -10,6 +10,7 @@ import (
 type service struct {
 	restaurant RestaurantRepository
 	menu       MenuRepository
+	category   CategoryRepository
 }
 
 type RestaurantRepository interface {
@@ -21,9 +22,14 @@ type MenuRepository interface {
 	ListByRestaurantID(ctx context.Context, restaurantID string) ([]menu.MenuItem, error)
 }
 
-func New(restaurant RestaurantRepository, menu MenuRepository) *service {
+type CategoryRepository interface {
+	List(ctx context.Context) ([]menu.Category, error)
+}
+
+func New(restaurant RestaurantRepository, menu MenuRepository, category CategoryRepository) *service {
 	return &service{
 		restaurant: restaurant,
 		menu:       menu,
+		category:   category,
 	}
 }

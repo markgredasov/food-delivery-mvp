@@ -15,6 +15,35 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/categories": {
+            "get": {
+                "description": "Возвращает список зарегистрированных в сервисе категорий",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "catalog"
+                ],
+                "summary": "Список категорий",
+                "responses": {
+                    "200": {
+                        "description": "Информация о заведении",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handler_catalog.RestaurantDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/restaurants": {
             "get": {
                 "description": "Возвращает список активных заведений",
