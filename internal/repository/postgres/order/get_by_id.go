@@ -44,9 +44,9 @@ func (r *repository) GetByID(ctx context.Context, id uuid.UUID) (order.Order, er
 
 func (r *repository) itemsFor(ctx context.Context, q database_postgres.Querier, orderID uuid.UUID) ([]order.OrderItem, error) {
 	sqlQuery := `
-		SELECT oi.id, oi.menu_item_id, mi.name, oi.quantity, oi.price_at_order
-		FROM order_items oi
-		JOIN menu_items mi ON mi.id = oi.menu_item_id
+		SELECT oi.id, oi.order_id, oi.menu_item_id, mi.name, oi.quantity, oi.price
+		FROM kitchen.order_items oi
+		JOIN kitchen.menu_items mi ON mi.id = oi.menu_item_id
 		WHERE oi.order_id = $1
 		ORDER BY oi.id
 	`
@@ -61,7 +61,7 @@ func (r *repository) itemsFor(ctx context.Context, q database_postgres.Querier, 
 		var it order.OrderItem
 		var lineID uuid.UUID
 		var price money.Money
-		if err = rows.Scan(&lineID, &it.MenuItemID, &it.Name, &it.Quantity, &price); err != nil {
+		if err = rows.Scan(&lineID, &it.OrderID, &it.MenuItemID, &it.Name, &it.Quantity, &price); err != nil {
 			return nil, errs.Internal("scan order item", err)
 		}
 		it.ID = lineID

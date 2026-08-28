@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/restaurant"
 	server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
@@ -15,8 +16,8 @@ type handler struct {
 
 type catalogService interface {
 	ListActiveRestaurants(ctx context.Context) ([]restaurant.Restaurant, error)
-	GetRestaurant(ctx context.Context, restaurantID string) (restaurant.Restaurant, error)
-	GetMenu(ctx context.Context, restaurantID string) ([]menu.MenuItem, error)
+	GetRestaurant(ctx context.Context, restaurantID uuid.UUID) (restaurant.Restaurant, error)
+	GetMenu(ctx context.Context, restaurantID uuid.UUID) ([]menu.MenuItem, error)
 	ListCategories(ctx context.Context) ([]menu.Category, error)
 }
 

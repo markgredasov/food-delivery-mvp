@@ -150,6 +150,12 @@ paths:
       - application/json
       description: Создает заказ
       parameters:
+      - description: UUID пользователя. Если не передан - заказ анонимный. Замена
+          авторизации в MVP.
+        format: uuid
+        in: header
+        name: X-User-ID
+        type: string
       - description: Тело запроса
         in: body
         name: RequestBody
@@ -180,6 +186,40 @@ paths:
           schema:
             $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
       summary: Создать заказ
+      tags:
+      - orders
+  /orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает подробную информацию о заказе
+      parameters:
+      - description: Идентификатор заказа
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о заказе
+          schema:
+            $ref: '#/definitions/internal_handler_orders.CreateOrderDTOResponse'
+        "400":
+          description: Невалидный запрос
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Получить информацию о заказе
       tags:
       - orders
   /restaurants:

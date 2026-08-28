@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/address"
+	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/money"
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/order"
 )
 
@@ -71,5 +72,64 @@ func createOrderToDTO(m order.Order) CreateOrderDTOResponse {
 		Status:               m.Status.String(),
 		TotalAmount:          m.TotalAmount.String(),
 		EstimatedDevieryTime: m.CreatedAt,
+	}
+}
+
+type OrderItemDTO struct {
+	ID         string      `json:"id"`
+	OrderID    string      `json:"order_id"`
+	MenuItemID string      `json:"menu_item_id"`
+	Name       string      `json:"name"`
+	Price      money.Money `json:"price"`
+	Quantity   int         `json:"quantity"`
+}
+
+func toOrderItem(m order.OrderItem) OrderItemDTO {
+	return OrderItemDTO{
+		ID:         m.ID.String(),
+		OrderID:    m.OrderID.String(),
+		MenuItemID: m.MenuItemID.String(),
+		Name:       m.Name,
+		Price:      m.Price,
+		Quantity:   m.Quantity,
+	}
+}
+
+type OrderDTO struct {
+	ID              string          `json:"id"`
+	RestaurantID    string          `json:"restaurant_id"`
+	UserID          *string         `json:"user_id"`
+	Status          string          `json:"status"`
+	DeliveryAddress address.Address `json:"delivery_address"`
+	TotalAmount     money.Money     `json:"total_amount"`
+	Items           []OrderItemDTO  `json:"order_items"`
+	Comment         *string         `json:"comment"`
+	CreatedAt       time.Time       `json:"created_at"`
+	UpdatedAt       time.Time       `json:"updated_at"`
+}
+
+func toOrder(m order.Order) OrderDTO {
+	items := make([]OrderItemDTO, len(m.Items))
+	for i := range m.Items {
+		items[i] = toOrderItem(m.Items[i])
+	}
+
+	var uid *string
+	if m.UserID != nil {
+		userIDString := m.UserID.String()
+		uid = &userIDString
+	}
+
+	return OrderDTO{
+		ID:              m.ID.String(),
+		RestaurantID:    m.RestaurantID.String(),
+		UserID:          uid,
+		Status:          m.Status.String(),
+		DeliveryAddress: m.DeliveryAddress,
+		TotalAmount:     m.TotalAmount,
+		Items:           items,
+		Comment:         m.Comment,
+		CreatedAt:       m.CreatedAt,
+		UpdatedAt:       m.UpdatedAt,
 	}
 }

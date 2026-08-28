@@ -53,6 +53,13 @@
                 "summary": "Создать заказ",
                 "parameters": [
                     {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID пользователя. Если не передан - заказ анонимный. Замена авторизации в MVP.",
+                        "name": "X-User-ID",
+                        "in": "header"
+                    },
+                    {
                         "description": "Тело запроса",
                         "name": "RequestBody",
                         "in": "body",
@@ -83,6 +90,57 @@
                     },
                     "409": {
                         "description": "Конфликт",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}": {
+            "get": {
+                "description": "Возвращает подробную информацию о заказе",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Получить информацию о заказе",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Идентификатор заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация о заказе",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handler_orders.CreateOrderDTOResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Невалидный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Заказ не найден",
                         "schema": {
                             "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
                         }

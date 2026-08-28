@@ -18,6 +18,7 @@ const UserIDHeaderName = "X-User-ID"
 // @Tags orders
 // @Accept json
 // @Produce json
+// @Param X-User-ID header string false "UUID пользователя. Если не передан - заказ анонимный. Замена авторизации в MVP." Format(uuid)
 // @Param 		RequestBody		body		CreateOrderDTORequest		true	"Тело запроса"
 // @Success 201 {object} CreateOrderDTOResponse "Созданный заказ"
 // @Success 400 {object} response.ErrorResponse "Невалидный запрос"
