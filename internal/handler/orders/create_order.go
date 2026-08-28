@@ -37,7 +37,7 @@ func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, err := request.GetUserIDFromHeader(r, UserIDHeaderName)
+	userID, err := request.GetUUIDFromHeader(r, UserIDHeaderName)
 	if err != nil {
 		if errors.Is(err, errs.ErrNotFound) {
 			userID = nil

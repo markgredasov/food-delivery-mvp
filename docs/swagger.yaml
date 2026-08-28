@@ -1,5 +1,20 @@
 basePath: /api/v1
 definitions:
+  github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_address.Address:
+    properties:
+      apartment:
+        type: string
+      city:
+        type: string
+      comment:
+        type: string
+      house:
+        type: string
+      street:
+        type: string
+    type: object
+  github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_money.Money:
+    type: object
   github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails:
     properties:
       err:
@@ -118,6 +133,53 @@ definitions:
       quantity:
         type: integer
     type: object
+  internal_handler_orders.OrderDTO:
+    properties:
+      comment:
+        type: string
+      created_at:
+        type: string
+      delivery_address:
+        $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_address.Address'
+      id:
+        type: string
+      order_items:
+        items:
+          $ref: '#/definitions/internal_handler_orders.OrderItemDTO'
+        type: array
+      restaurant_id:
+        type: string
+      status:
+        type: string
+      total_amount:
+        $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_money.Money'
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  internal_handler_orders.OrderItemDTO:
+    properties:
+      id:
+        type: string
+      menu_item_id:
+        type: string
+      name:
+        type: string
+      order_id:
+        type: string
+      price:
+        $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_money.Money'
+      quantity:
+        type: integer
+    type: object
+  internal_handler_orders.OrdersDTO:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/internal_handler_orders.OrderDTO'
+        type: array
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -206,7 +268,7 @@ paths:
         "200":
           description: Информация о заказе
           schema:
-            $ref: '#/definitions/internal_handler_orders.CreateOrderDTOResponse'
+            $ref: '#/definitions/internal_handler_orders.OrderDTO'
         "400":
           description: Невалидный запрос
           schema:
@@ -309,6 +371,41 @@ paths:
       summary: Меню заведения
       tags:
       - catalog
+  /restaurants/orders:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает активные заказы заведения
+      parameters:
+      - description: UUID ресторана. UUID заведения, от имени которого выполняется
+          запрос (замена авторизации в MVP).
+        format: uuid
+        in: header
+        name: X-Restaurant-ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация об активных заказах
+          schema:
+            $ref: '#/definitions/internal_handler_orders.OrdersDTO'
+        "400":
+          description: Невалидный запрос (неверный формат UUID)
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Ресторан не найден
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Заказы заведения (pending + активные)
+      tags:
+      - restaurant
 swagger: "2.0"
 tags:
 - description: Каталог заведений, меню, категорий (пользовательская часть).

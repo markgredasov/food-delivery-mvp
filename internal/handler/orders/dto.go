@@ -133,3 +133,18 @@ func toOrder(m order.Order) OrderDTO {
 		UpdatedAt:       m.UpdatedAt,
 	}
 }
+
+type OrdersDTO struct {
+	Orders []OrderDTO `json:"orders"`
+}
+
+func toOrders(m []order.Order) OrdersDTO {
+	out := make([]OrderDTO, len(m))
+	for i := range m {
+		out[i] = toOrder(m[i])
+	}
+
+	return OrdersDTO{
+		Orders: out,
+	}
+}

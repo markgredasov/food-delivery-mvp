@@ -30,6 +30,7 @@ type OrderRepository interface {
 	Create(ctx context.Context, o order.Order) error
 	GetByID(ctx context.Context, id uuid.UUID) (order.Order, error)
 	UpdateStatus(ctx context.Context, id uuid.UUID, from, to order.Status) error
+	ListActiveByRestaurant(ctx context.Context, restaurantID uuid.UUID) ([]order.Order, error)
 }
 
 type TxManager interface {

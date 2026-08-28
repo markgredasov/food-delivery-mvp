@@ -130,7 +130,7 @@
                     "200": {
                         "description": "Информация о заказе",
                         "schema": {
-                            "$ref": "#/definitions/internal_handler_orders.CreateOrderDTOResponse"
+                            "$ref": "#/definitions/internal_handler_orders.OrderDTO"
                         }
                     },
                     "400": {
@@ -172,6 +172,57 @@
                         "description": "Список зведений",
                         "schema": {
                             "$ref": "#/definitions/internal_handler_catalog.RestaurantsDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/restaurants/orders": {
+            "get": {
+                "description": "Возвращает активные заказы заведения",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurant"
+                ],
+                "summary": "Заказы заведения (pending + активные)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID ресторана. UUID заведения, от имени которого выполняется запрос (замена авторизации в MVP).",
+                        "name": "X-Restaurant-ID",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация об активных заказах",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handler_orders.OrdersDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Невалидный запрос (неверный формат UUID)",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Ресторан не найден",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
                         }
                     },
                     "500": {
@@ -287,6 +338,29 @@
         }
     },
     "definitions": {
+        "github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_address.Address": {
+            "type": "object",
+            "properties": {
+                "apartment": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "house": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_money.Money": {
+            "type": "object"
+        },
         "github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails": {
             "type": "object",
             "properties": {
@@ -467,6 +541,78 @@
                 },
                 "quantity": {
                     "type": "integer"
+                }
+            }
+        },
+        "internal_handler_orders.OrderDTO": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "delivery_address": {
+                    "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_address.Address"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "order_items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_handler_orders.OrderItemDTO"
+                    }
+                },
+                "restaurant_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_amount": {
+                    "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_money.Money"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_handler_orders.OrderItemDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "menu_item_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order_id": {
+                    "type": "string"
+                },
+                "price": {
+                    "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_model_money.Money"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_handler_orders.OrdersDTO": {
+            "type": "object",
+            "properties": {
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_handler_orders.OrderDTO"
+                    }
                 }
             }
         }

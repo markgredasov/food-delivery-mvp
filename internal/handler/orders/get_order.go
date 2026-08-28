@@ -15,7 +15,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param 	id	 path string  true "Идентификатор заказа" Format(uuid)
-// @Success 200 {object} CreateOrderDTOResponse "Информация о заказе"
+// @Success 200 {object} OrderDTO "Информация о заказе"
 // @Success 400 {object} response.ErrorResponse "Невалидный запрос"
 // @Success 404 {object} response.ErrorResponse "Заказ не найден"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
