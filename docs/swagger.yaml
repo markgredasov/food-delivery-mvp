@@ -1,0 +1,279 @@
+basePath: /api/v1
+definitions:
+  github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails:
+    properties:
+      err:
+        type: string
+      message:
+        type: string
+    type: object
+  ? github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse
+  : properties:
+      error:
+        $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorDetails'
+    type: object
+  internal_handler_catalog.AddressDTO:
+    properties:
+      apartment:
+        type: string
+      city:
+        type: string
+      house:
+        type: string
+      street:
+        type: string
+    type: object
+  internal_handler_catalog.CategoryDTO:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  internal_handler_catalog.MenuItemDTO:
+    properties:
+      available:
+        type: boolean
+      category:
+        $ref: '#/definitions/internal_handler_catalog.CategoryDTO'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+      restaurant_id:
+        type: string
+    type: object
+  internal_handler_catalog.MenuItemsDTO:
+    properties:
+      menu_items:
+        items:
+          $ref: '#/definitions/internal_handler_catalog.MenuItemDTO'
+        type: array
+    type: object
+  internal_handler_catalog.RestaurantDTO:
+    properties:
+      address:
+        $ref: '#/definitions/internal_handler_catalog.AddressDTO'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  internal_handler_catalog.RestaurantsDTO:
+    properties:
+      restaurants:
+        items:
+          $ref: '#/definitions/internal_handler_catalog.RestaurantDTO'
+        type: array
+    type: object
+  internal_handler_orders.AddressDTO:
+    properties:
+      apartment:
+        type: string
+      city:
+        type: string
+      comment:
+        type: string
+      house:
+        type: string
+      street:
+        type: string
+    type: object
+  internal_handler_orders.CreateOrderDTORequest:
+    properties:
+      comment:
+        type: string
+      delivery_address:
+        $ref: '#/definitions/internal_handler_orders.AddressDTO'
+      order_items:
+        items:
+          $ref: '#/definitions/internal_handler_orders.CreateOrderItemDTORequest'
+        type: array
+      restaurant_id:
+        type: string
+    type: object
+  internal_handler_orders.CreateOrderDTOResponse:
+    properties:
+      estimated_delivery_time:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      total_amount:
+        type: string
+    type: object
+  internal_handler_orders.CreateOrderItemDTORequest:
+    properties:
+      menu_item_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: MVP API агрегатора доставки еды «Авито.Кухня».
+  title: Avito Kitchen API
+  version: 1.0.0
+paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список зарегистрированных в сервисе категорий
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о заведении
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.RestaurantDTO'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Список категорий
+      tags:
+      - catalog
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Создает заказ
+      parameters:
+      - description: Тело запроса
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler_orders.CreateOrderDTORequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Созданный заказ
+          schema:
+            $ref: '#/definitions/internal_handler_orders.CreateOrderDTOResponse'
+        "400":
+          description: Невалидный запрос
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Не найдено
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "409":
+          description: Конфликт
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Создать заказ
+      tags:
+      - orders
+  /restaurants:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список активных заведений
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список зведений
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.RestaurantsDTO'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Список активных заведений
+      tags:
+      - catalog
+  /restaurants/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает информацию о заведении
+      parameters:
+      - description: Идентификатор заведения
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о заведении
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.RestaurantDTO'
+        "400":
+          description: Невалидный запрос (неправильный формат UUID ресторана)
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заведение не найдено
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Детали заведения
+      tags:
+      - catalog
+  /restaurants/{id}/menu:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает меню заведения
+      parameters:
+      - description: Идентификатор заведения
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Меню заведения
+          schema:
+            $ref: '#/definitions/internal_handler_catalog.MenuItemsDTO'
+        "400":
+          description: Невалидный запрос (неправильный формат UUID ресторана)
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заведение не найдено
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Меню заведения
+      tags:
+      - catalog
+swagger: "2.0"
+tags:
+- description: Каталог заведений, меню, категорий (пользовательская часть).
+  name: catalog
+- description: Заказы (пользовательская часть).
+  name: orders
+- description: API для заведений.
+  name: restaurant

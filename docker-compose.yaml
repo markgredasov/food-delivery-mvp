@@ -12,14 +12,21 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - news-distribution-network  
+      - avito-kitchen-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
+  swagger:
+    build: 
+      context: ${PROJECT_ROOT}
+      dockerfile: docs/Dockerfile
+    volumes:
+      - ${PROJECT_ROOT}:/code
+
 networks:
-  news-distribution-network:
+  avito-kitchen-network:
     driver: bridge
     
