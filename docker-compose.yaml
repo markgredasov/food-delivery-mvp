@@ -58,8 +58,10 @@ services:
     environment:
       - MAIN_SERVICE_URL=http://app:8080
       - RESTAURANT_ID=123e4567-e89b-12d3-a456-426614174000
-      - LISTEN_PORT=8081
-      - LOG_LEVEL=info
+      - HTTP_ADDR=:8081
+      - HTTP_SHUTDOWN_TIMEOUT=${HTTP_SHUTDOWN_TIMEOUT:-5s}
+      - LOGGER_LEVEL=${LOGGER_LEVEL:-DEBUG}
+      - LOGGER_FOLDER=${LOGGER_FOLDER:-./out/logs/}
     depends_on:
       app:
         condition: service_started

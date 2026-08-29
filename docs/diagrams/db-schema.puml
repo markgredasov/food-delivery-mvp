@@ -1,0 +1,64 @@
+@startuml db-schema
+title Авито.Кухня — схема БД (ER)
+
+entity "restaurants" as restaurants {
+  * id : UUID <<PK>>
+  --
+  * name : TEXT
+  * address : TEXT
+  * status : TEXT  -- active | inactive
+  * service_url : TEXT
+  * created_at : TIMESTAMPTZ
+  * updated_at : TIMESTAMPTZ
+}
+
+entity "categories" as categories {
+  * id : UUID <<PK>>
+  --
+  * name : TEXT
+  icon : TEXT
+  * created_at : TIMESTAMPTZ
+}
+
+entity "menu_items" as menu_items {
+  * id : UUID <<PK>>
+  --
+  * restaurant_id : UUID <<FK>>
+  category_id : UUID <<FK>>
+  * name : TEXT
+  * price : NUMERIC(12,2)
+  * available : BOOLEAN
+  * created_at : TIMESTAMPTZ
+  * updated_at : TIMESTAMPTZ
+}
+
+entity "orders" as orders {
+  * id : UUID <<PK>>
+  --
+  * restaurant_id : UUID <<FK>>
+  user_id : TEXT
+  * delivery_address : TEXT
+  * status : TEXT  -- pending | sent_to_restaurant | accepted |
+  ..                -- preparing | ready | in_delivery |
+  ..                -- delivered | rejected_by_restaurant
+  * total_amount : NUMERIC(12,2)
+  * created_at : TIMESTAMPTZ
+  * updated_at : TIMESTAMPTZ
+}
+
+entity "order_items" as order_items {
+  * id : UUID <<PK>>
+  --
+  * order_id : UUID <<FK>>
+  * menu_item_id : UUID <<FK>>
+  * quantity : INTEGER
+  * price : NUMERIC(12,2)
+}
+
+restaurants ||--o{ menu_items
+categories  |o..o{ menu_items : "SET NULL on delete"
+restaurants ||--o{ orders
+orders      ||--o{ order_items
+menu_items  ||--o{ order_items : "снапшот price_at_order,\nname резолвится через JOIN"
+
+@enduml

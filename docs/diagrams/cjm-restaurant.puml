@@ -1,0 +1,46 @@
+@startuml cjm-restaurant
+title Customer Journey — обработка заказа заведением
+
+start
+
+:Синхронизировать меню
+PUT /api/v1/restaurant/menu
+(X-Restaurant-Id, при старте и по таймеру);
+
+fork
+  :Ждать webhook
+  POST {webhook_url}/webhook/orders;
+fork again
+  :Периодически опрашивать
+  GET /api/v1/restaurant/orders
+  (fallback, если webhook не дошёл);
+end fork
+
+:Получен новый заказ (order_id);
+
+if (Заказ уже обработан?) then (да)
+  :Игнорировать повтор;
+  stop
+else (нет)
+endif
+
+if (Заведение готово принять заказ?) then (нет)
+  :POST .../orders/{id}/reject
+  (reason);
+  stop
+else (да)
+endif
+
+:POST /api/v1/restaurant/orders/{id}/accept;
+
+:PATCH .../status {status: preparing};
+:Готовить заказ;
+:PATCH .../status {status: ready};
+:Передать курьеру;
+:PATCH .../status {status: in_delivery};
+:Курьер доставляет;
+:PATCH .../status {status: delivered};
+
+stop
+
+@enduml

@@ -12,6 +12,12 @@ func (s *service) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, items
 		return nil, err
 	}
 
+	for i, it := range items {
+		if it.ID == uuid.Nil {
+			items[i].ID = uuid.New()
+		}
+	}
+
 	var out []menu.MenuItem
 	err := s.tx.WithTx(ctx, func(ctx context.Context) error {
 		var err error

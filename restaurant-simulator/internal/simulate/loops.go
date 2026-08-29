@@ -7,21 +7,23 @@ import (
 	"go.uber.org/zap"
 
 	"avito-kitchen-restaurant-simulator/internal/client"
+	"avito-kitchen-restaurant-simulator/internal/logger"
 )
 
 // Menu is the simulator's fixed catalog of 3 dishes, synced to the main
 // service on startup and periodically thereafter.
 var Menu = []client.MenuItemInput{
-	{Name: "Пицца Маргарита", Price: "550.00", Available: true, CategoryID: strPtr("22222222-2222-2222-2222-222222222221")},
-	{Name: "Кока-кола 0.5л", Price: "120.00", Available: true, CategoryID: strPtr("22222222-2222-2222-2222-222222222222")},
-	{Name: "Тирамису", Price: "320.00", Available: true, CategoryID: strPtr("22222222-2222-2222-2222-222222222223")},
+	{ID: "e96808cf-7f59-46bc-a958-0f9392f08e0c", Name: "Пицца Маргарита", Price: "550.00", Available: true},
+	{ID: "e96808cf-7f59-46bc-a958-0f9392f08e0b", Name: "Кока-кола 0.5л", Price: "120.00", Available: true},
+	{ID: "e96808cf-7f59-46bc-a958-0f9392f08e0a", Name: "Тирамису", Price: "320.00", Available: true},
 }
 
 func strPtr(s string) *string { return &s }
 
 // SyncMenuLoop pushes Menu to the main service immediately, then again every
 // interval until ctx is cancelled.
-func SyncMenuLoop(ctx context.Context, c *client.Client, interval time.Duration, log *zap.Logger) {
+func SyncMenuLoop(ctx context.Context, c *client.Client, interval time.Duration) {
+	log := logger.FromContext(ctx)
 	syncOnce := func() {
 		if err := c.SyncMenu(ctx, Menu); err != nil {
 			log.Warn("menu sync failed", zap.Error(err))
@@ -46,7 +48,8 @@ func SyncMenuLoop(ctx context.Context, c *client.Client, interval time.Duration,
 // PollLoop periodically fetches the restaurant's pending/active orders and
 // hands each to proc — a fallback in case a webhook push was missed, since
 // HandleNewOrder is idempotent for orders already claimed.
-func PollLoop(ctx context.Context, c *client.Client, proc *Processor, interval time.Duration, log *zap.Logger) {
+func PollLoop(ctx context.Context, c *client.Client, proc *Processor, interval time.Duration) {
+	log := logger.FromContext(ctx)
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 	for {

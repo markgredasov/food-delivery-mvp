@@ -1,0 +1,18 @@
+@startuml c4-context
+!define C4_Context ./c4/C4_Context.puml
+!include C4_Context
+
+title Авито.Кухня — C4 Context
+
+Person(user, "Пользователь", "Заходит на Авито.Кухня, выбирает заведение и делает заказ")
+Person(restaurantStaff, "Сотрудник заведения", "Через свою систему принимает и готовит заказы")
+
+System(kitchen, "Авито.Кухня", "Агрегатор доставки еды: каталог заведений, меню, заказы")
+System_Ext(restaurantSystem, "Система заведения", "Стороннее ПО заведения (в MVP — restaurant-simulator), принимает и обрабатывает заказы")
+
+Rel(user, kitchen, "Смотрит меню, создаёт заказ, следит за статусом", "HTTPS/JSON")
+Rel(kitchen, restaurantSystem, "Отправляет новые заказы (webhook)", "HTTPS/JSON")
+Rel(restaurantSystem, kitchen, "Синхронизирует меню, забирает заказы (poll), меняет статус", "HTTPS/JSON")
+Rel(restaurantStaff, restaurantSystem, "Управляет меню и заказами")
+
+@enduml

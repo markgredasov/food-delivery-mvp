@@ -28,7 +28,11 @@ func (r *repository) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, ne
 
 	keepIDs := make([]uuid.UUID, 0, len(newItems))
 	for _, it := range newItems {
-		if _, err := q.Exec(ctx, sqlQueryInsert, it.ID, restaurantID, it.Category.ID, it.Name,
+		var categoryID *uuid.UUID
+		if it.Category != nil {
+			categoryID = &it.Category.ID
+		}
+		if _, err := q.Exec(ctx, sqlQueryInsert, it.ID, restaurantID, categoryID, it.Name,
 			it.Description, it.Price, it.Available); err != nil {
 			return nil, errs.Internal("replace menu item", err)
 		}

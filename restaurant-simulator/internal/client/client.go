@@ -27,6 +27,7 @@ type MenuItemInput struct {
 	Name       string  `json:"name"`
 	Price      string  `json:"price"`
 	Available  bool    `json:"available"`
+	ID         string  `json:"id"`
 }
 
 // OrderItem is one line item as returned by the main service.
@@ -137,7 +138,7 @@ func (c *Client) do(ctx context.Context, method, path string, body []byte, out a
 	if err != nil {
 		return err
 	}
-	req.Header.Set("X-Restaurant-Id", c.restaurantID)
+	req.Header.Set("X-Restaurant-ID", c.restaurantID)
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}

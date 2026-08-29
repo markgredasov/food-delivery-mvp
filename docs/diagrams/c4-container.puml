@@ -1,0 +1,24 @@
+@startuml c4-container
+!define C4_Container ./c4/C4_Container.puml
+!include C4_Container
+
+title Авито.Кухня — C4 Container
+
+Person(user, "Пользователь")
+Person(restaurantStaff, "Сотрудник заведения")
+
+System_Boundary(kitchen, "Авито.Кухня") {
+  Container(api, "API service", "Go", "REST API: каталог, меню, заказы. State machine статусов заказа")
+  ContainerDb(db, "PostgreSQL", "PostgreSQL 18", "Заведения, категории, меню, заказы, позиции заказов")
+}
+
+Container_Ext(simulator, "restaurant-simulator", "Go, отдельный модуль/сервис", "Пример интеграции стороннего заведения: синхронизация меню, приём заказов (webhook + polling), обработка статусов")
+
+Rel(user, api, "HTTP API: список заведений, меню, создание/просмотр заказа", "JSON/HTTPS")
+Rel(restaurantStaff, simulator, "Условно управляет (в MVP — автономная симуляция)")
+
+Rel(api, db, "Запросы", "SQL (pgx)")
+
+Rel(api, simulator, "POST /webhook/orders — новый заказ", "HTTPS/JSON")
+
+@enduml

@@ -159,12 +159,12 @@ type UpdateOrderStatusDTO struct {
 }
 
 type UpdateMenuItemDTO struct {
-	ID          uuid.UUID `json:"id"`
-	CategoryID  uuid.UUID `json:"category_id"`
-	Name        string    `json:"name"`
-	Description *string   `json:"description"`
-	Price       string    `json:"price"`
-	Available   bool      `json:"available"`
+	ID          *uuid.UUID `json:"id"`
+	CategoryID  *uuid.UUID `json:"category_id"`
+	Name        string     `json:"name"`
+	Description *string    `json:"description"`
+	Price       string     `json:"price"`
+	Available   bool       `json:"available"`
 }
 
 type UpdateMenuDTO struct {
@@ -178,16 +178,28 @@ func updateMenuToModel(req UpdateMenuDTO) ([]menu.MenuItem, error) {
 		if err != nil {
 			return nil, errs.InvalidRequest("price must be positive number")
 		}
+
+		id := uuid.Nil
+		if it.ID != nil {
+			id = *it.ID
+		}
+
+		var category *menu.Category
+		if it.CategoryID != nil {
+			category = &menu.Category{
+				ID: *it.CategoryID,
+			}
+		}
+
 		item := menu.MenuItem{
-			ID: it.ID,
-			Category: &menu.Category{
-				ID: it.CategoryID,
-			},
+			ID:          id,
 			Name:        it.Name,
 			Description: it.Description,
+			Category:    category,
 			Price:       price,
 			Available:   it.Available,
 		}
+
 		items[i] = item
 	}
 
@@ -197,9 +209,13 @@ func updateMenuToModel(req UpdateMenuDTO) ([]menu.MenuItem, error) {
 func updateMenuToDTO(m []menu.MenuItem) UpdateMenuDTO {
 	items := make([]UpdateMenuItemDTO, len(m))
 	for i, it := range m {
+		var categoryID *uuid.UUID
+		if it.Category != nil {
+			categoryID = &it.Category.ID
+		}
 		item := UpdateMenuItemDTO{
-			ID:          it.ID,
-			CategoryID:  it.Category.ID,
+			ID:          &it.ID,
+			CategoryID:  categoryID,
 			Name:        it.Name,
 			Description: it.Description,
 			Price:       it.Price.String(),

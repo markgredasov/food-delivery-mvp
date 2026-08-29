@@ -1,0 +1,62 @@
+@startuml cjm-user
+title Customer Journey — размещение заказа
+
+start
+
+:Открыть Авито.Кухня;
+:GET /api/v1/restaurants;
+if (Список заведений пуст?) then (да)
+  :Показать "нет доступных заведений";
+  stop
+else (нет)
+endif
+
+:Выбрать заведение;
+:GET /api/v1/restaurants/{id}/menu;
+
+if (Меню пусто?) then (да)
+  :Показать "меню временно недоступно";
+  stop
+else (нет)
+endif
+
+repeat
+  :Добавить позицию в корзину
+  (только available=true);
+repeat while (Продолжить выбор?) is (да)
+->нет;
+
+:Указать адрес доставки;
+:POST /api/v1/orders
+(X-User-Id, items, delivery_address);
+
+if (Ответ сервиса?) then (400/404 — позиция\nнедоступна или заведение неактивно)
+  :Показать ошибку,\nвернуться к меню;
+  stop
+elseif (409 — конфликт) then (да)
+  :Показать ошибку,\nобновить меню;
+  stop
+else (201 Created)
+endif
+
+:Показать номер заказа и статус "pending";
+
+repeat
+  :GET /api/v1/orders/{id}
+  (polling статуса);
+  :Показать текущий статус
+  (sent_to_restaurant → accepted →
+  preparing → ready → in_delivery);
+repeat while (status != delivered\nand status != rejected_by_restaurant) is (ждать)
+->готово;
+
+if (Финальный статус?) then (rejected_by_restaurant)
+  :Показать "заведение отклонило заказ"
+  (в т.ч. авто-отказ по таймауту 5 мин);
+else (delivered)
+  :Показать "заказ доставлен";
+endif
+
+stop
+
+@enduml
