@@ -1,0 +1,22 @@
+all: false
+filename: "mocks.go"
+
+packages:
+  github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/service/catalog:
+    config:
+      dir: ./mocks/catalog
+    interfaces:
+      RestaurantRepository: {}
+      MenuRepository: {}
+      CategoryRepository: {}
+      TxManager: {}
+  github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/service/order:
+    config:
+      dir: ./mocks/order
+    interfaces:
+      RestaurantRepository: {}
+      MenuRepository: {}
+      OrderRepository: {}
+      TxManager: {}
+      WebhookSender: {}
+inpackage: false
