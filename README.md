@@ -1,4 +1,4 @@
-# Авито.Кухня — MVP
+# Авито.Кухня
 
 MVP-агрегатор доставки еды: API для заведений (приём заказов) и API для
 клиентской части (каталог, заказы), а также сервис-заглушка одного заведения
@@ -35,9 +35,6 @@ curl http://localhost:8080/health
 curl http://localhost:8080/api/v1/restaurants
 ```
 
-Локальная разработка без Docker — см. `Makefile` (`make generate`, `make
-migrate`, `make lint`, `make test`).
-
 ## Основные сценарии (CJM)
 
 Диаграммы в `docs/diagrams/` (PlantUML, code-generated):
@@ -50,8 +47,7 @@ migrate`, `make lint`, `make test`).
 - [`cjm-restaurant.puml`](docs/diagrams/cjm-restaurant.puml) — путь заведения:
   синхронизация меню → получение заказа (webhook, с fallback через polling) →
   обработка дубликатов → accept/reject → прогресс статусов до
-  `delivered`, либо авто-отказ платформой по таймауту, если заведение не
-  ответило за `AUTO_REJECT_AFTER` (по умолчанию 5 минут).
+  `delivered`.
 
 ## Архитектура (C4)
 
@@ -59,12 +55,12 @@ migrate`, `make lint`, `make test`).
   пользователь, заведение, сервис Авито.Кухня, внешняя система заведения.
 - [`c4-container.puml`](docs/diagrams/c4-container.puml) — уровень 2
   (Container): API service (Go), PostgreSQL,
-Основной сервис написан в стиле DDD-слоёв без ORM:
+Основной сервис написан в стиле DDD-слоёв:
 
 ```
 handler (HTTP, generated ServerInterface)
    -> service (бизнес-логика, транзакции)
-      -> repository (pgxpool, без ORM)
+      -> repository (pgxpool)
          -> PostgreSQL
 domain (money, address, restaurant, menu, order — сущности и инварианты,
         не зависят от остальных слоёв)
@@ -86,8 +82,7 @@ ER-диаграмма: [`docs/diagrams/db-schema.puml`](docs/diagrams/db-schema.
 - **menu_items** — `id, restaurant_id, category_id, name, price, available`.
   `price` — `NUMERIC(12,2)`, без отдельного поля валюты (см. упрощения).
 - **orders** — `id, restaurant_id, user_id, delivery_address, status,
-  total_amount`. `status` — текстовый enum с CHECK-constraint'ом,
-  повторяющий стейт-машину заказа (см. `internal/domain/order`).
+  total_amount`.
 - **order_items** — `id, order_id, menu_item_id, quantity, price`.
 
 Индексы: `menu_items(restaurant_id)`, `orders(restaurant_id, status)`,
@@ -151,6 +146,6 @@ pending ──────────────► sent_to_restaurant ──�
   может быть обработан повторно, что безопасно за счёт идемпотентности на
   стороне основного сервиса — accept/reject/status проверяют текущий
   статус заказа).
-- **Нет интеграционных тестов** (testcontainers и т.п.) — только unit-тесты
+- **Нет интеграционных тестов** — только unit-тесты
   домена и сервисного слоя (на фейковых репозиториях). Ограничение по
   времени задания; отмечено как возможное улучшение.
