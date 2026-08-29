@@ -18,12 +18,12 @@ func (a *App) initFeatures() []server_http.Route {
 	restaurantRepo := restaurantrepo.New(a.pool)
 	menuRepo := menurepo.New(a.pool)
 	categoryRepo := categoryrepo.New(a.pool)
-	catalogService := catalogservice.New(restaurantRepo, menuRepo, categoryRepo)
+	catalogService := catalogservice.New(restaurantRepo, menuRepo, categoryRepo, a.pool)
 	catalogHandler := cataloghandler.New(catalogService)
 
 	ordersRepo := orderrepo.New(a.pool)
 	ordersService := orderservice.New(restaurantRepo, menuRepo, ordersRepo, a.pool, a.webhookClient)
-	ordersHandler := ordershandler.New(ordersService)
+	ordersHandler := ordershandler.New(ordersService, catalogService)
 
 	routes = append(routes, catalogHandler.Routes()...)
 	routes = append(routes, ordersHandler.Routes()...)

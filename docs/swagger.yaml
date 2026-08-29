@@ -185,6 +185,28 @@ definitions:
       reason:
         type: string
     type: object
+  internal_handler_orders.UpdateMenuDTO:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/internal_handler_orders.UpdateMenuItemDTO'
+        type: array
+    type: object
+  internal_handler_orders.UpdateMenuItemDTO:
+    properties:
+      available:
+        type: boolean
+      category_id:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+    type: object
   internal_handler_orders.UpdateOrderStatusDTO:
     properties:
       status:
@@ -381,6 +403,46 @@ paths:
       summary: Меню заведения
       tags:
       - catalog
+  /restaurants/menu:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет меню заведения целиком и возвращает обновленное меню
+      parameters:
+      - description: UUID ресторана. Замена авторизации в MVP.
+        format: uuid
+        in: header
+        name: X-Restaurant-ID
+        required: true
+        type: string
+      - description: Тело запроса
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler_orders.UpdateMenuDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Обновленное меню
+          schema:
+            $ref: '#/definitions/internal_handler_orders.UpdateMenuDTO'
+        "400":
+          description: Невалидный запрос
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заведение не найдено
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Обновить меню целиком
+      tags:
+      - restaurant
   /restaurants/orders:
     get:
       consumes:

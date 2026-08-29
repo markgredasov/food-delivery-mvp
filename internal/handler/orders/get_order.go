@@ -31,7 +31,7 @@ func (h *handler) GetOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order, err := h.service.GetOrder(ctx, orderID)
+	order, err := h.orders.GetOrder(ctx, orderID)
 	if err != nil {
 		rh.ErrorResponse(err)
 		return

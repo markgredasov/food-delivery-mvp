@@ -53,7 +53,7 @@ func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdOrder, err := h.service.CreateOrder(ctx, reqOrder)
+	createdOrder, err := h.orders.CreateOrder(ctx, reqOrder)
 	if err != nil {
 		rh.ErrorResponse(err)
 		return

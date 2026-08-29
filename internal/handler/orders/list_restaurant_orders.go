@@ -33,7 +33,7 @@ func (h *handler) ListRestaurantOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orders, err := h.service.ListRestaurantOrders(ctx, *restaurantID)
+	orders, err := h.orders.ListRestaurantOrders(ctx, *restaurantID)
 	if err != nil {
 		rh.ErrorResponse(err)
 		return

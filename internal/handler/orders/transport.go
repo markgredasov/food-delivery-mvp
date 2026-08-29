@@ -5,12 +5,14 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
 	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/order"
 	server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
 )
 
 type handler struct {
-	service orderService
+	orders  orderService
+	catalog catalogService
 }
 
 type orderService interface {
@@ -22,9 +24,14 @@ type orderService interface {
 	UpdateStatus(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, statusString string) (order.Order, error)
 }
 
-func New(service orderService) *handler {
+type catalogService interface {
+	ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, items []menu.MenuItem) ([]menu.MenuItem, error)
+}
+
+func New(orders orderService, catalog catalogService) *handler {
 	return &handler{
-		service: service,
+		orders:  orders,
+		catalog: catalog,
 	}
 }
 
@@ -59,6 +66,11 @@ func (h *handler) Routes() []server_http.Route {
 			Method:  http.MethodPatch,
 			Path:    "/restaurants/orders/{id}/status",
 			Handler: h.UpdateStatus,
+		},
+		{
+			Method:  http.MethodPut,
+			Path:    "/restaurants/menu",
+			Handler: h.UpdateRestaurantMenu,
 		},
 	}
 }

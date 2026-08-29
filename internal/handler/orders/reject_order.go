@@ -47,7 +47,7 @@ func (h *handler) RejectOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rejectedOrder, err := h.service.RejectOrder(ctx, *restaurantID, orderID, req.Reason)
+	rejectedOrder, err := h.orders.RejectOrder(ctx, *restaurantID, orderID, req.Reason)
 	if err != nil {
 		rh.ErrorResponse(err)
 		return

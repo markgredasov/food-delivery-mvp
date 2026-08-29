@@ -47,7 +47,7 @@ func (h *handler) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	acceptedOrder, err := h.service.UpdateStatus(ctx, *restaurantID, orderID, req.Status)
+	acceptedOrder, err := h.orders.UpdateStatus(ctx, *restaurantID, orderID, req.Status)
 	if err != nil {
 		rh.ErrorResponse(err)
 		return
