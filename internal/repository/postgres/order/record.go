@@ -17,6 +17,7 @@ type record struct {
 	DeliveryAddress address.Address
 	Status          string
 	TotalAmount     money.Money
+	Comment         *string
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }
@@ -52,6 +53,7 @@ func toModel(r record) (order.Order, error) {
 		UserID:          userID,
 		Status:          status,
 		DeliveryAddress: r.DeliveryAddress,
+		Comment:         r.Comment,
 		TotalAmount:     r.TotalAmount,
 		CreatedAt:       r.CreatedAt,
 		UpdatedAt:       r.UpdatedAt,

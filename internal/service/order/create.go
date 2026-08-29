@@ -125,7 +125,7 @@ func (s *service) pushToRestaurant(ctx context.Context, o order.Order) {
 		return
 	}
 
-	if err = s.orders.UpdateStatus(ctx, o.ID, order.OrderStatusPending, order.OrderStatusConfirmed); err != nil {
+	if err = s.orders.UpdateStatus(ctx, o.ID, order.StatusPending, order.StatusSentToRestaurant); err != nil {
 		log.Warn("failed to record confirmed after successful webhook delivery",
 			zap.String("order_id", o.ID.String()), zap.Error(err))
 	}

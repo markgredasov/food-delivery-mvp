@@ -25,6 +25,17 @@ func (s *service) RejectOrder(ctx context.Context, restaurantID uuid.UUID, order
 	})
 }
 
+func (s *service) UpdateStatus(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, statusString string) (order.Order, error) {
+	next, err := order.NewStatus(statusString)
+	if err != nil {
+		return order.Order{}, err
+	}
+
+	return s.transitionOwnedOrder(ctx, restaurantID, orderID, func(o *order.Order) error {
+		return o.AdvanceTo(next)
+	})
+}
+
 func (s *service) transitionOwnedOrder(ctx context.Context, restaurantID, orderID uuid.UUID, mutate func(o *order.Order) error) (order.Order, error) {
 	o, err := s.orders.GetByID(ctx, orderID)
 	if err != nil {

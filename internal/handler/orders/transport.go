@@ -19,6 +19,7 @@ type orderService interface {
 	ListRestaurantOrders(ctx context.Context, restaurantID uuid.UUID) ([]order.Order, error)
 	AcceptOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID) (order.Order, error)
 	RejectOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, reason string) (order.Order, error)
+	UpdateStatus(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, statusString string) (order.Order, error)
 }
 
 func New(service orderService) *handler {
@@ -53,6 +54,11 @@ func (h *handler) Routes() []server_http.Route {
 			Method:  http.MethodPost,
 			Path:    "/restaurants/orders/{id}/reject",
 			Handler: h.RejectOrder,
+		},
+		{
+			Method:  http.MethodPatch,
+			Path:    "/restaurants/orders/{id}/status",
+			Handler: h.UpdateStatus,
 		},
 	}
 }

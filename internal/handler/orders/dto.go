@@ -152,3 +152,7 @@ func toOrders(m []order.Order) OrdersDTO {
 type RejectOrderDTO struct {
 	Reason string `json:"reason"`
 }
+
+type UpdateOrderStatusDTO struct {
+	Status string `json:"status"`
+}

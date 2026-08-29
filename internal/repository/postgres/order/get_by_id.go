@@ -20,7 +20,7 @@ func (r *repository) GetByID(ctx context.Context, id uuid.UUID) (order.Order, er
 	q := r.pool.GetQuerier(ctx)
 
 	sqlQuery := `
-		SELECT id, restaurant_id, user_id, delivery_address, status, total_amount, created_at, updated_at
+		SELECT id, restaurant_id, user_id, delivery_address, status, total_amount, comment, created_at, updated_at
 		FROM kitchen.orders
 		WHERE id = $1;
 	`

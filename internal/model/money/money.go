@@ -81,7 +81,7 @@ func (m *Money) IsZero() bool { return m.amount.IsZero() }
 // MarshalJSON renders the amount as a JSON string ("350.00"), matching the
 // OpenAPI schema which represents money as a decimal string to avoid float
 // precision issues on the wire.
-func (m *Money) MarshalJSON() ([]byte, error) {
+func (m Money) MarshalJSON() ([]byte, error) {
 	return []byte(`"` + m.amount.StringFixed(2) + `"`), nil
 }
 

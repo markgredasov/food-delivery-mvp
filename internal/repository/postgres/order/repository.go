@@ -19,7 +19,7 @@ func New(pool database_postgres.Pool) *repository {
 
 func scanOrder(row pgx.Row) (order.Order, error) {
 	var r record
-	err := row.Scan(&r.ID, &r.RestaurantID, &r.UserID, &r.DeliveryAddress, &r.Status, &r.TotalAmount, &r.CreatedAt, &r.UpdatedAt)
+	err := row.Scan(&r.ID, &r.RestaurantID, &r.UserID, &r.DeliveryAddress, &r.Status, &r.TotalAmount, &r.Comment, &r.CreatedAt, &r.UpdatedAt)
 	if err != nil {
 		return order.Order{}, errs.Internal("scan order", err)
 	}

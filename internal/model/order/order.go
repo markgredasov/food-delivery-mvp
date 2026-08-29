@@ -1,6 +1,7 @@
 package order
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,21 +15,41 @@ type Status string
 
 // Order lifecycle statuses.
 const (
-	OrderStatusPending    Status = "pending"
-	OrderStatusConfirmed  Status = "sent_to_restaurant"
-	OrderStatusAccepted   Status = "accepted"
-	OrderStatusPreparing  Status = "preparing"
-	OrderStatusReady      Status = "ready"
-	OrderStatusInDelivery Status = "in_delivery"
-	OrderStatusDelivered  Status = "delivered"
-	OrderStatusRejected   Status = "rejected_by_restaurant"
+	StatusPending          Status = "pending"
+	StatusSentToRestaurant Status = "sent_to_restaurant"
+	StatusAccepted         Status = "accepted"
+	StatusPreparing        Status = "preparing"
+	StatusReady            Status = "ready"
+	StatusInDelivery       Status = "in_delivery"
+	StatusDelivered        Status = "delivered"
+	StatusRejected         Status = "rejected_by_restaurant"
 )
+
+// pipelineTransitions defines the linear post-acceptance progression that
+// UpdateStatus is allowed to advance through. Accept/Reject are handled by
+// their own dedicated methods below, since they apply from two possible
+// source statuses and carry their own business rules.
+var pipelineTransitions = map[Status]Status{ //nolint:exhaustive // do not need to check all statuses
+	StatusAccepted:   StatusPreparing,
+	StatusPreparing:  StatusReady,
+	StatusReady:      StatusInDelivery,
+	StatusInDelivery: StatusDelivered,
+}
+
+// NewStatus builds and validates order Status.
+func NewStatus(statusString string) (Status, error) {
+	status := Status(statusString)
+	if !status.Valid() {
+		return "", errs.InvalidArgument(fmt.Sprintf("invalid status: %s", statusString))
+	}
+	return status, nil
+}
 
 // Valid reports if s is a valid status.
 func (s Status) Valid() bool {
 	switch s {
-	case OrderStatusPending, OrderStatusConfirmed, OrderStatusAccepted, OrderStatusPreparing,
-		OrderStatusReady, OrderStatusInDelivery, OrderStatusDelivered, OrderStatusRejected:
+	case StatusPending, StatusSentToRestaurant, StatusAccepted, StatusPreparing,
+		StatusReady, StatusInDelivery, StatusDelivered, StatusRejected:
 		return true
 	}
 	return false
@@ -41,13 +62,13 @@ func (s Status) String() string {
 
 // IsTerminal checks if order is processed.
 func (s Status) IsTerminal() bool {
-	return s == OrderStatusInDelivery || s == OrderStatusRejected
+	return s == StatusInDelivery || s == StatusRejected
 }
 
 // awaitingRestaurantResponse are the statuses eligible for the 5-minute
 // auto-reject timeout and for the restaurant polling fallback.
 func (s Status) awaitingRestaurantResponse() bool {
-	return s == OrderStatusPending || s == OrderStatusConfirmed
+	return s == StatusPending || s == StatusSentToRestaurant
 }
 
 // OrderItem is a line item snapshot: it freezes the menu item's name and
@@ -113,7 +134,7 @@ func New(id, restaurantID uuid.UUID, userID *uuid.UUID, deliveryAddr address.Add
 		ID:              id,
 		RestaurantID:    restaurantID,
 		UserID:          userID,
-		Status:          OrderStatusPending,
+		Status:          StatusPending,
 		DeliveryAddress: deliveryAddr,
 		TotalAmount:     total,
 		Items:           items,
@@ -128,7 +149,7 @@ func (o *Order) Accept() error {
 	if !o.Status.awaitingRestaurantResponse() {
 		return errs.Conflict("order in status " + string(o.Status) + " cannot be accepted")
 	}
-	o.Status = OrderStatusAccepted
+	o.Status = StatusAccepted
 	return nil
 }
 
@@ -138,7 +159,7 @@ func (o *Order) Reject() error {
 	if !o.Status.awaitingRestaurantResponse() {
 		return errs.Conflict("order in status " + string(o.Status) + " cannot be rejected")
 	}
-	o.Status = OrderStatusRejected
+	o.Status = StatusRejected
 	return nil
 }
 
@@ -153,4 +174,21 @@ func (o *Order) IsOwnedBy(restaurantID uuid.UUID) bool {
 // the restaurant to accept/reject it.
 func (o *Order) AwaitingRestaurantResponse() bool {
 	return o.Status.awaitingRestaurantResponse()
+}
+
+// AdvanceTo moves the order forward through the post-acceptance pipeline
+// (accepted -> preparing -> ready -> in_delivery -> delivered). It rejects
+// any attempt to skip a step or to reach pending/sent_to_restaurant/accepted
+// /rejected_by_restaurant through this generic path — those are reached via
+// New/Accept/Reject respectively.
+func (o *Order) AdvanceTo(next Status) error {
+	if !next.Valid() {
+		return errs.InvalidArgument("unknown order status " + string(next))
+	}
+	want, ok := pipelineTransitions[o.Status]
+	if !ok || want != next {
+		return errs.Conflict("cannot transition order from " + string(o.Status) + " to " + string(next))
+	}
+	o.Status = next
+	return nil
 }
