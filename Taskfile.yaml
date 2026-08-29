@@ -91,3 +91,11 @@ tasks:
   coverage:
     cmds:
       - go tool cover -func=coverage.out
+
+  up:
+    cmds:
+      - docker compose up -d app restaurant-simulator
+
+  down:
+    cmds:
+      - docker compose down app restaurant-simulator
