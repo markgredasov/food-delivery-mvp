@@ -16,19 +16,19 @@ type Status string
 const (
 	OrderStatusPending    Status = "pending"
 	OrderStatusConfirmed  Status = "sent_to_restaurant"
+	OrderStatusAccepted   Status = "accepted"
 	OrderStatusPreparing  Status = "preparing"
 	OrderStatusReady      Status = "ready"
 	OrderStatusInDelivery Status = "in_delivery"
 	OrderStatusDelivered  Status = "delivered"
-	OrderStatusCancelled  Status = "cancelled"
-	OrderStatusRejected   Status = "rejected"
+	OrderStatusRejected   Status = "rejected_by_restaurant"
 )
 
 // Valid reports if s is a valid status.
 func (s Status) Valid() bool {
 	switch s {
-	case OrderStatusPending, OrderStatusConfirmed, OrderStatusPreparing, OrderStatusReady,
-		OrderStatusInDelivery, OrderStatusDelivered, OrderStatusCancelled, OrderStatusRejected:
+	case OrderStatusPending, OrderStatusConfirmed, OrderStatusAccepted, OrderStatusPreparing,
+		OrderStatusReady, OrderStatusInDelivery, OrderStatusDelivered, OrderStatusRejected:
 		return true
 	}
 	return false
@@ -41,7 +41,13 @@ func (s Status) String() string {
 
 // IsTerminal checks if order is processed.
 func (s Status) IsTerminal() bool {
-	return s == OrderStatusInDelivery || s == OrderStatusCancelled || s == OrderStatusRejected
+	return s == OrderStatusInDelivery || s == OrderStatusRejected
+}
+
+// awaitingRestaurantResponse are the statuses eligible for the 5-minute
+// auto-reject timeout and for the restaurant polling fallback.
+func (s Status) awaitingRestaurantResponse() bool {
+	return s == OrderStatusPending || s == OrderStatusConfirmed
 }
 
 // OrderItem is a line item snapshot: it freezes the menu item's name and
@@ -117,12 +123,22 @@ func New(id, restaurantID uuid.UUID, userID *uuid.UUID, deliveryAddr address.Add
 
 // Accept marks the order as accepted by the restaurant. Allowed from
 // pending (webhook delivery failed, restaurant discovered the order via
-// polling).
+// polling) or sent_to_restaurant (the normal push path).
 func (o *Order) Accept() error {
-	if o.Status != OrderStatusPending {
+	if !o.Status.awaitingRestaurantResponse() {
 		return errs.Conflict("order in status " + string(o.Status) + " cannot be accepted")
 	}
-	o.Status = OrderStatusConfirmed
+	o.Status = OrderStatusAccepted
+	return nil
+}
+
+// Reject marks the order as rejected by the restaurant (or by the
+// auto-reject timeout). Allowed from the same states as Accept.
+func (o *Order) Reject() error {
+	if !o.Status.awaitingRestaurantResponse() {
+		return errs.Conflict("order in status " + string(o.Status) + " cannot be rejected")
+	}
+	o.Status = OrderStatusRejected
 	return nil
 }
 
@@ -131,4 +147,10 @@ func (o *Order) Accept() error {
 // on another restaurant's order.
 func (o *Order) IsOwnedBy(restaurantID uuid.UUID) bool {
 	return o.RestaurantID == restaurantID
+}
+
+// AwaitingRestaurantResponse reports whether the order is still waiting for
+// the restaurant to accept/reject it.
+func (o *Order) AwaitingRestaurantResponse() bool {
+	return o.Status.awaitingRestaurantResponse()
 }

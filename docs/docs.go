@@ -291,7 +291,87 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Ресторан не найден",
+                        "description": "Заказ не найден",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Конфликт при обновлении статуса заказа",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/restaurants/orders/{id}/reject": {
+            "post": {
+                "description": "Отклоняет заказ с объяснением причины",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurant"
+                ],
+                "summary": "Отклонить заказ",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID ресторана. Замена авторизации в MVP.",
+                        "name": "X-Restaurant-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Идентификатор заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Тело запроса",
+                        "name": "RequestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_handler_orders.RejectOrderDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Отклоненный заказ",
+                        "schema": {
+                            "$ref": "#/definitions/internal_handler_orders.OrderDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Невалидный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Заказ не принадлежит данному ресторану",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Заказ не найден",
                         "schema": {
                             "$ref": "#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse"
                         }
@@ -690,6 +770,14 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/internal_handler_orders.OrderDTO"
                     }
+                }
+            }
+        },
+        "internal_handler_orders.RejectOrderDTO": {
+            "type": "object",
+            "properties": {
+                "reason": {
+                    "type": "string"
                 }
             }
         }

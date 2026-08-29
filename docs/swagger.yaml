@@ -180,6 +180,11 @@ definitions:
           $ref: '#/definitions/internal_handler_orders.OrderDTO'
         type: array
     type: object
+  internal_handler_orders.RejectOrderDTO:
+    properties:
+      reason:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -440,7 +445,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
         "404":
-          description: Ресторан не найден
+          description: Заказ не найден
           schema:
             $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
         "409":
@@ -452,6 +457,60 @@ paths:
           schema:
             $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
       summary: Принять заказ
+      tags:
+      - restaurant
+  /restaurants/orders/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Отклоняет заказ с объяснением причины
+      parameters:
+      - description: UUID ресторана. Замена авторизации в MVP.
+        format: uuid
+        in: header
+        name: X-Restaurant-ID
+        required: true
+        type: string
+      - description: Идентификатор заказа
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Тело запроса
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler_orders.RejectOrderDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Отклоненный заказ
+          schema:
+            $ref: '#/definitions/internal_handler_orders.OrderDTO'
+        "400":
+          description: Невалидный запрос
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "403":
+          description: Заказ не принадлежит данному ресторану
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "404":
+          description: Заказ не найден
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "409":
+          description: Конфликт при обновлении статуса заказа
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/github_com_talense-tasks_backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca_internal_server_http_response.ErrorResponse'
+      summary: Отклонить заказ
       tags:
       - restaurant
 swagger: "2.0"

@@ -148,3 +148,7 @@ func toOrders(m []order.Order) OrdersDTO {
 		Orders: out,
 	}
 }
+
+type RejectOrderDTO struct {
+	Reason string `json:"reason"`
+}
