@@ -12,7 +12,7 @@ INSERT INTO kitchen.restaurants (id, name, description, address, status, service
         "comment": "Вход со двора"
     }'::jsonb,
     'active',
-    'http://restaurant-simulator:8081'
+    'http://restaurant-simulator:8081/api/v1'
 ),
 (
     '123e4567-e89b-12d3-a456-426614174001',

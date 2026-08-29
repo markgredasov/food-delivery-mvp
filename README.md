@@ -31,7 +31,7 @@ docker compose up --build
 Проверка, что всё поднялось:
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:8081/api/v1/health
 curl http://localhost:8080/api/v1/restaurants
 ```
 

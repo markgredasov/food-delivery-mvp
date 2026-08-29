@@ -46,13 +46,6 @@ tasks:
       LOGGER_LEVEL: '{{.LOGGER_LEVEL}}'
       LOGGER_FOLDER: '{{.LOGGER_FOLDER | default "./out/logs/"}}'
 
-  run-example:
-    cmds:
-      - go run ./example/main.go
-    env:
-      LOGGER_LEVEL: '{{.LOGGER_LEVEL}}'
-      LOGGER_FOLDER: '{{.LOGGER_FOLDER | default "./out/logs/"}}'
-
   migrate-create:
     requires:
       vars:
