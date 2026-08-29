@@ -15,7 +15,7 @@ type Status string
 // Order lifecycle statuses.
 const (
 	OrderStatusPending    Status = "pending"
-	OrderStatusConfirmed  Status = "confirmed"
+	OrderStatusConfirmed  Status = "sent_to_restaurant"
 	OrderStatusPreparing  Status = "preparing"
 	OrderStatusReady      Status = "ready"
 	OrderStatusInDelivery Status = "in_delivery"
@@ -113,4 +113,22 @@ func New(id, restaurantID uuid.UUID, userID *uuid.UUID, deliveryAddr address.Add
 		Items:           items,
 		Comment:         comment,
 	}, nil
+}
+
+// Accept marks the order as accepted by the restaurant. Allowed from
+// pending (webhook delivery failed, restaurant discovered the order via
+// polling).
+func (o *Order) Accept() error {
+	if o.Status != OrderStatusPending {
+		return errs.Conflict("order in status " + string(o.Status) + " cannot be accepted")
+	}
+	o.Status = OrderStatusConfirmed
+	return nil
+}
+
+// IsOwnedBy reports whether restaurantID is the restaurant this order was
+// placed against — used to guard restaurant-side endpoints against acting
+// on another restaurant's order.
+func (o *Order) IsOwnedBy(restaurantID uuid.UUID) bool {
+	return o.RestaurantID == restaurantID
 }

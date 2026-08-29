@@ -10,6 +10,7 @@ package client
 
 import (
 	"avito-kitchen-restaurant-simulator/internal/model/address"
+	"avito-kitchen-restaurant-simulator/internal/model/money"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -30,22 +31,31 @@ type MenuItemInput struct {
 
 // OrderItem is one line item as returned by the main service.
 type OrderItem struct {
-	MenuItemID string `json:"menu_item_id"`
-	Name       string `json:"name"`
-	Quantity   int    `json:"quantity"`
-	Price      string `json:"price"`
+	ID         string      `json:"id"`
+	OrderID    string      `json:"order_id"`
+	MenuItemID string      `json:"menu_item_id"`
+	Name       string      `json:"name"`
+	Price      money.Money `json:"price"`
+	Quantity   int         `json:"quantity"`
 }
 
-// Order is the order representation returned by GET /orders/{id} and
-// GET /restaurant/orders.
+// Order is the order representation returned by GET /orders/{id}.
 type Order struct {
 	ID              string          `json:"id"`
 	RestaurantID    string          `json:"restaurant_id"`
+	UserID          *string         `json:"user_id"`
 	Status          string          `json:"status"`
 	DeliveryAddress address.Address `json:"delivery_address"`
-	TotalAmount     string          `json:"total_amount"`
-	Items           []OrderItem     `json:"items"`
+	TotalAmount     money.Money     `json:"total_amount"`
+	Items           []OrderItem     `json:"order_items"`
+	Comment         *string         `json:"comment"`
 	CreatedAt       time.Time       `json:"created_at"`
+	UpdatedAt       time.Time       `json:"updated_at"`
+}
+
+// Order is the order representation returned by GET /restaurant/orders.
+type Orders struct {
+	Orders []Order `json:"orders"`
 }
 
 // WebhookPayload is the body the main service POSTs to
@@ -83,21 +93,21 @@ func (c *Client) SyncMenu(ctx context.Context, items []MenuItemInput) error {
 	if err != nil {
 		return err
 	}
-	return c.do(ctx, http.MethodPut, "/api/v1/restaurant/menu", body, nil)
+	return c.do(ctx, http.MethodPut, "/api/v1/restaurants/menu", body, nil)
 }
 
 // ListPendingOrders returns the restaurant's pending + active orders.
-func (c *Client) ListPendingOrders(ctx context.Context) ([]Order, error) {
-	var out []Order
-	if err := c.do(ctx, http.MethodGet, "/api/v1/restaurant/orders", nil, &out); err != nil {
-		return nil, err
+func (c *Client) ListPendingOrders(ctx context.Context) (Orders, error) {
+	var out Orders
+	if err := c.do(ctx, http.MethodGet, "/api/v1/restaurants/orders", nil, &out); err != nil {
+		return Orders{}, err
 	}
 	return out, nil
 }
 
 // Accept accepts orderID.
 func (c *Client) Accept(ctx context.Context, orderID string) error {
-	return c.do(ctx, http.MethodPost, "/api/v1/restaurant/orders/"+orderID+"/accept", nil, nil)
+	return c.do(ctx, http.MethodPost, "/api/v1/restaurants/orders/"+orderID+"/accept", nil, nil)
 }
 
 // Reject rejects orderID with an optional reason.
@@ -106,7 +116,7 @@ func (c *Client) Reject(ctx context.Context, orderID, reason string) error {
 	if err != nil {
 		return err
 	}
-	return c.do(ctx, http.MethodPost, "/api/v1/restaurant/orders/"+orderID+"/reject", body, nil)
+	return c.do(ctx, http.MethodPost, "/api/v1/restaurants/orders/"+orderID+"/reject", body, nil)
 }
 
 // UpdateStatus advances orderID to status.
@@ -115,7 +125,7 @@ func (c *Client) UpdateStatus(ctx context.Context, orderID, status string) error
 	if err != nil {
 		return err
 	}
-	return c.do(ctx, http.MethodPatch, "/api/v1/restaurant/orders/"+orderID+"/status", body, nil)
+	return c.do(ctx, http.MethodPatch, "/api/v1/restaurants/orders/"+orderID+"/status", body, nil)
 }
 
 func (c *Client) do(ctx context.Context, method, path string, body []byte, out any) error {

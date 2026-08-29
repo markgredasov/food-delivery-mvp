@@ -59,7 +59,7 @@ func PollLoop(ctx context.Context, c *client.Client, proc *Processor, interval t
 				log.Warn("poll failed", zap.Error(err))
 				continue
 			}
-			for _, o := range orders {
+			for _, o := range orders.Orders {
 				proc.HandleNewOrder(ctx, o.ID)
 			}
 		}

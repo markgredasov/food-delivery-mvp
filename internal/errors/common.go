@@ -13,6 +13,7 @@ var (
 	ErrNotImplemented  = errors.New("not implemented yet")
 	ErrConflict        = errors.New("conflict")
 	ErrInternal        = errors.New("internal")
+	ErrForbidden       = errors.New("forbidden")
 )
 
 func InvalidArgument(msg string) error {
@@ -41,4 +42,8 @@ func Conflict(msg string) error {
 
 func Internal(msg string, err error) error {
 	return fmt.Errorf("%s: %w: %w", msg, err, ErrInternal)
+}
+
+func Forbidden(msg string) error {
+	return fmt.Errorf("%s: %w", msg, ErrForbidden)
 }

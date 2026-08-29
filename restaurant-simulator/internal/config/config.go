@@ -30,8 +30,8 @@ func Load() (Config, error) {
 	}
 
 	return Config{
-		MainServiceURL:   getenv("MAIN_SERVICE_URL", "http://api:8080"),
-		RestaurantID:     getenv("RESTAURANT_ID", "11111111-1111-1111-1111-111111111111"),
+		MainServiceURL:   getenv("MAIN_SERVICE_URL", "http://localhost:8080"),
+		RestaurantID:     getenv("RESTAURANT_ID", "123e4567-e89b-12d3-a456-426614174000"),
 		ListenPort:       getenv("LISTEN_PORT", "8081"),
 		MenuSyncInterval: menuSync,
 		PollInterval:     poll,

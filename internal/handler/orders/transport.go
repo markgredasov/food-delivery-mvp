@@ -17,6 +17,7 @@ type orderService interface {
 	CreateOrder(ctx context.Context, o order.Order) (order.Order, error)
 	GetOrder(ctx context.Context, id uuid.UUID) (order.Order, error)
 	ListRestaurantOrders(ctx context.Context, restaurantID uuid.UUID) ([]order.Order, error)
+	AcceptOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID) (order.Order, error)
 }
 
 func New(service orderService) *handler {
@@ -41,6 +42,11 @@ func (h *handler) Routes() []server_http.Route {
 			Method:  http.MethodGet,
 			Path:    "/restaurants/orders",
 			Handler: h.ListRestaurantOrders,
+		},
+		{
+			Method:  http.MethodPost,
+			Path:    "/restaurants/orders/{id}/accept",
+			Handler: h.AcceptOrder,
 		},
 	}
 }
