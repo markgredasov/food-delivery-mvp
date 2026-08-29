@@ -83,3 +83,11 @@ tasks:
   swagger:
     cmds:
       - docker compose run --rm swagger init -g cmd/app/main.go -o docs --parseInternal --parseDependency
+
+  tests-unit:
+    cmds:
+      - go test -v -coverprofile=coverage.out ./internal/... -coverpkg=./internal/...
+  
+  coverage:
+    cmds:
+      - go tool cover -func=coverage.out
