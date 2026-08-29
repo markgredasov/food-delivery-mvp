@@ -44,15 +44,20 @@ type MenuItem struct {
 // NewMenuItem validates and builds new MenuItem.
 func NewMenuItem(id, restaurantID uuid.UUID, category *Category, name string,
 	description *string, price money.Money, available bool) (MenuItem, error) {
-	if name == "" {
+	trimmedName := strings.TrimSpace(name)
+	if trimmedName == "" {
 		return MenuItem{}, errs.InvalidArgument("menu item name must not be empty")
+	}
+
+	if price.IsZero() {
+		return MenuItem{}, errs.InvalidArgument("price must be greater than zero")
 	}
 
 	return MenuItem{
 		ID:           id,
 		RestaurantID: restaurantID,
 		Category:     category,
-		Name:         name,
+		Name:         trimmedName,
 		Description:  description,
 		Price:        price,
 		Available:    available,

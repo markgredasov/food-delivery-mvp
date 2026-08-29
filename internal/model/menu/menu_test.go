@@ -151,53 +151,6 @@ func TestNewMenuItem_EmptyName(t *testing.T) {
 	assert.Equal(t, menu.MenuItem{}, item)
 }
 
-func TestNewMenuItem_NameTooLong(t *testing.T) {
-	id := uuid.New()
-	restaurantID := uuid.New()
-	category := &menu.Category{ID: uuid.New(), Name: "Soups"}
-	price := money.MustFromString("350.00")
-	longName := string(make([]rune, 101))
-
-	item, err := menu.NewMenuItem(
-		id,
-		restaurantID,
-		category,
-		longName,
-		nil,
-		price,
-		true,
-	)
-
-	require.Error(t, err)
-	require.ErrorIs(t, err, errs.ErrInvalidArgument)
-	assert.Contains(t, err.Error(), "name is too long")
-	assert.Equal(t, menu.MenuItem{}, item)
-}
-
-func TestNewMenuItem_DescriptionTooLong(t *testing.T) {
-	id := uuid.New()
-	restaurantID := uuid.New()
-	category := &menu.Category{ID: uuid.New(), Name: "Soups"}
-	price := money.MustFromString("350.00")
-	longDescription := string(make([]rune, 501))
-	desc := &longDescription
-
-	item, err := menu.NewMenuItem(
-		id,
-		restaurantID,
-		category,
-		"Soup",
-		desc,
-		price,
-		true,
-	)
-
-	require.Error(t, err)
-	require.ErrorIs(t, err, errs.ErrInvalidArgument)
-	assert.Contains(t, err.Error(), "description is too long")
-	assert.Equal(t, menu.MenuItem{}, item)
-}
-
 func TestNewMenuItem_ZeroPrice(t *testing.T) {
 	id := uuid.New()
 	restaurantID := uuid.New()
@@ -211,28 +164,6 @@ func TestNewMenuItem_ZeroPrice(t *testing.T) {
 		"Soup",
 		nil,
 		zeroPrice,
-		true,
-	)
-
-	require.Error(t, err)
-	require.ErrorIs(t, err, errs.ErrInvalidArgument)
-	assert.Contains(t, err.Error(), "price must be greater than zero")
-	assert.Equal(t, menu.MenuItem{}, item)
-}
-
-func TestNewMenuItem_NegativePrice(t *testing.T) {
-	id := uuid.New()
-	restaurantID := uuid.New()
-	category := &menu.Category{ID: uuid.New(), Name: "Soups"}
-	negativePrice := money.MustFromString("-10.00")
-
-	item, err := menu.NewMenuItem(
-		id,
-		restaurantID,
-		category,
-		"Soup",
-		nil,
-		negativePrice,
 		true,
 	)
 

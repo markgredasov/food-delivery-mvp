@@ -292,7 +292,7 @@ func TestNewOrder(t *testing.T) {
 			require.NoError(t, err)
 			assert.Equal(t, order.StatusPending, ord.Status)
 			assert.Equal(t, tt.wantTotal, ord.TotalAmount.String())
-			assert.Len(t, len(tt.items), len(ord.Items))
+			assert.Len(t, tt.items, len(ord.Items))
 
 			if tt.comment != nil {
 				assert.Equal(t, *tt.comment, *ord.Comment)
