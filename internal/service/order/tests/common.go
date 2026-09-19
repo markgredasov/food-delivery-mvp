@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/logger"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/address"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/money"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/order"
+	"github.com/markgredasov/food-delivery-mvp/internal/logger"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/address"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/money"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
 )
 
 func createTestOrder(id, restID uuid.UUID, status order.Status) order.Order {

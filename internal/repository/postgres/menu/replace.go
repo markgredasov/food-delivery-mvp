@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
 func (r *repository) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, newItems []menu.MenuItem) ([]menu.MenuItem, error) {

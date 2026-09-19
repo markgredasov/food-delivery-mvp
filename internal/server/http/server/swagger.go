@@ -3,8 +3,8 @@ package server_http
 import (
 	"net/http"
 
+	"github.com/markgredasov/food-delivery-mvp/docs"
 	httpSwagger "github.com/swaggo/http-swagger"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/docs"
 )
 
 func (h *HTTPServer) RegisterSwagger() {

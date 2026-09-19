@@ -3,8 +3,8 @@ package restaurantrepo
 import (
 	"context"
 
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/restaurant"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
 func (r *repository) ListActive(ctx context.Context) ([]restaurant.Restaurant, error) {

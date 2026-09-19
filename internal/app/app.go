@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	database_postgres "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/database/postgres"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/logger"
-	server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/service/webhook"
+	database_postgres "github.com/markgredasov/food-delivery-mvp/internal/database/postgres"
+	"github.com/markgredasov/food-delivery-mvp/internal/logger"
+	server_http "github.com/markgredasov/food-delivery-mvp/internal/server/http/server"
+	"github.com/markgredasov/food-delivery-mvp/internal/service/webhook"
 	"go.uber.org/zap"
 )
 

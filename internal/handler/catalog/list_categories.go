@@ -3,8 +3,8 @@ package cataloghandler
 import (
 	"net/http"
 
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/logger"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/response"
+	"github.com/markgredasov/food-delivery-mvp/internal/logger"
+	"github.com/markgredasov/food-delivery-mvp/internal/server/http/response"
 )
 
 // ListCategories godoc

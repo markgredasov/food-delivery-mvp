@@ -2,8 +2,8 @@ package restaurantrepo
 
 import (
 	"github.com/jackc/pgx/v5"
-	database_postgres "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/database/postgres"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/restaurant"
+	database_postgres "github.com/markgredasov/food-delivery-mvp/internal/database/postgres"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
 type repository struct {

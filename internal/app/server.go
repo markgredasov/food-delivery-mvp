@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/middleware"
-	server_http "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/server"
+	"github.com/markgredasov/food-delivery-mvp/internal/server/http/middleware"
+	server_http "github.com/markgredasov/food-delivery-mvp/internal/server/http/server"
 )
 
 func (a *App) initHTTPServer(routes []server_http.Route) {

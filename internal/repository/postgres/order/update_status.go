@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/order"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
 )
 
 func (r *repository) UpdateStatus(ctx context.Context, id uuid.UUID, from, to order.Status) error {

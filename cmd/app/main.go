@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/app"
+	"github.com/markgredasov/food-delivery-mvp/internal/app"
 )
 
 // @title           Avito Kitchen API

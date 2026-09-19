@@ -7,10 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/restaurant"
-	service "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/service/catalog"
-	mocks "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/mocks/catalog"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
+	service "github.com/markgredasov/food-delivery-mvp/internal/service/catalog"
+	mocks "github.com/markgredasov/food-delivery-mvp/mocks/catalog"
 )
 
 func TestGetRestaurant_Success(t *testing.T) {

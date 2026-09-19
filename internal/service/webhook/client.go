@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/address"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/address"
 )
 
 // OrderItem is the wire representation of a single order line in the

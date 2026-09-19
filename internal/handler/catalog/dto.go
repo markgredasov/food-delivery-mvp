@@ -1,9 +1,9 @@
 package cataloghandler
 
 import (
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/address"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/restaurant"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/address"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
 type AddressDTO struct {

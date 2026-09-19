@@ -3,7 +3,7 @@ package server_http
 import (
 	"net/http"
 
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/middleware"
+	"github.com/markgredasov/food-delivery-mvp/internal/server/http/middleware"
 )
 
 type Route struct {

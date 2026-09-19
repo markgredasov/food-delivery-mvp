@@ -3,8 +3,8 @@ package categoryrepo
 import (
 	"context"
 
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
 func (r *repository) List(ctx context.Context) ([]menu.Category, error) {

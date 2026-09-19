@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
 )
 
 func GetUUIDPathValue(r *http.Request, key string) (uuid.UUID, error) {

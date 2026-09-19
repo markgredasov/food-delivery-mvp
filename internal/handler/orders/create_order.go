@@ -4,10 +4,10 @@ import (
 	"errors"
 	"net/http"
 
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/logger"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/request"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/server/http/response"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/logger"
+	"github.com/markgredasov/food-delivery-mvp/internal/server/http/request"
+	"github.com/markgredasov/food-delivery-mvp/internal/server/http/response"
 )
 
 const UserIDHeaderName = "X-User-ID"

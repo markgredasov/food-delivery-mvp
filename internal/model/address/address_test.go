@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	address "github.com/markgredasov/food-delivery-mvp/internal/model/address"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	address "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/address"
 )
 
 func TestNew(t *testing.T) {

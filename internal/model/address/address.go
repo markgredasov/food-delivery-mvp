@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
 )
 
 const maxLen = 100

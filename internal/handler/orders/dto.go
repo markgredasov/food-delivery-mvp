@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/address"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/money"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/order"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/address"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/money"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
 )
 
 type AddressDTO struct {

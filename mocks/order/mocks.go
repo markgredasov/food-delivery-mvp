@@ -8,11 +8,11 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
+	"github.com/markgredasov/food-delivery-mvp/internal/service/webhook"
 	mock "github.com/stretchr/testify/mock"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/order"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/restaurant"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/service/webhook"
 )
 
 // NewMockRestaurantRepository creates a new instance of MockRestaurantRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

@@ -2,9 +2,9 @@ package menurepo
 
 import (
 	"github.com/jackc/pgx/v5"
-	database_postgres "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/database/postgres"
-	errs "github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/errors"
-	"github.com/talense-tasks/backend-trainee-assignment-autumn-2026-markgredasov-5b2b61ca/internal/model/menu"
+	database_postgres "github.com/markgredasov/food-delivery-mvp/internal/database/postgres"
+	errs "github.com/markgredasov/food-delivery-mvp/internal/errors"
+	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
 type repository struct {
