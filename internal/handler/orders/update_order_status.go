@@ -24,7 +24,7 @@ import (
 // @Success 409 {object} response.ErrorResponse "Конфликт при обновлении статуса заказа (неверно задан следующий статус обновления)"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants/orders/{id}/status [patch]
-func (h *handler) UpdateStatus(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

@@ -20,7 +20,7 @@ import (
 // @Success 404 {object} response.ErrorResponse "Заведение не найдено"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants/{id}/menu [get]
-func (h *handler) GetMenu(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetMenu(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

@@ -22,7 +22,7 @@ const RestaurantIDHeaderName = "X-Restaurant-ID"
 // @Success 404 {object} response.ErrorResponse "Ресторан не найден"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants/orders [get]
-func (h *handler) ListRestaurantOrders(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ListRestaurantOrders(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

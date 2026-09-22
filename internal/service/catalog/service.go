@@ -8,7 +8,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
-type service struct {
+type Service struct {
 	restaurant RestaurantRepository
 	menu       MenuRepository
 	category   CategoryRepository
@@ -33,8 +33,8 @@ type TxManager interface {
 	WithTx(ctx context.Context, fn func(ctx context.Context) error) error
 }
 
-func New(restaurant RestaurantRepository, menu MenuRepository, category CategoryRepository, tx TxManager) *service {
-	return &service{
+func New(restaurant RestaurantRepository, menu MenuRepository, category CategoryRepository, tx TxManager) *Service {
+	return &Service{
 		restaurant: restaurant,
 		menu:       menu,
 		category:   category,

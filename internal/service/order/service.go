@@ -10,7 +10,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/service/webhook"
 )
 
-type service struct {
+type Service struct {
 	restaurants RestaurantRepository
 	menuItems   MenuRepository
 	orders      OrderRepository
@@ -42,8 +42,8 @@ type WebhookSender interface {
 }
 
 func New(restaurants RestaurantRepository, menu MenuRepository, orders OrderRepository,
-	txManager TxManager, webhookSender WebhookSender) *service {
-	return &service{
+	txManager TxManager, webhookSender WebhookSender) *Service {
+	return &Service{
 		restaurants: restaurants,
 		menuItems:   menu,
 		orders:      orders,

@@ -10,7 +10,7 @@ import (
 	server_http "github.com/markgredasov/food-delivery-mvp/internal/server/http/server"
 )
 
-type handler struct {
+type Handler struct {
 	service catalogService
 }
 
@@ -21,13 +21,13 @@ type catalogService interface {
 	ListCategories(ctx context.Context) ([]menu.Category, error)
 }
 
-func New(service catalogService) *handler {
-	return &handler{
+func New(service catalogService) *Handler {
+	return &Handler{
 		service: service,
 	}
 }
 
-func (h *handler) Routes() []server_http.Route {
+func (h *Handler) Routes() []server_http.Route {
 	return []server_http.Route{
 		{
 			Method:  http.MethodGet,

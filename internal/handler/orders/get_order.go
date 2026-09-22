@@ -20,7 +20,7 @@ import (
 // @Success 404 {object} response.ErrorResponse "Заказ не найден"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /orders/{id} [get]
-func (h *handler) GetOrder(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

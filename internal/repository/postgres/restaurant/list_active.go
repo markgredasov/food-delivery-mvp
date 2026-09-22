@@ -7,7 +7,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
-func (r *repository) ListActive(ctx context.Context) ([]restaurant.Restaurant, error) {
+func (r *Repository) ListActive(ctx context.Context) ([]restaurant.Restaurant, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

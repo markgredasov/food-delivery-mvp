@@ -20,7 +20,7 @@ import (
 // @Success 404 {object} response.ErrorResponse "Заведение не найдено"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants/{id} [get]
-func (h *handler) GetRestaurant(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetRestaurant(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

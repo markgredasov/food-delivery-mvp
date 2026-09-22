@@ -23,7 +23,7 @@ import (
 // @Success 409 {object} response.ErrorResponse "Конфликт при обновлении статуса заказа"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants/orders/{id}/accept [post]
-func (h *handler) AcceptOrder(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) AcceptOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

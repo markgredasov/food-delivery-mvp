@@ -1,19 +1,13 @@
 package middleware
 
 import (
-	"context"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/markgredasov/food-delivery-mvp/internal/logger"
 	"github.com/markgredasov/food-delivery-mvp/internal/server/http/response"
 	"go.uber.org/zap"
-)
-
-var (
-	loggerKey string = "logger"
 )
 
 func RequestID() Middleware {
@@ -39,13 +33,13 @@ func Logger(l *logger.Logger) Middleware {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requestID := r.Header.Get(requestIDHeader)
 
-			logger := l.With(
+			l = l.With(
 				zap.String("Request-ID", requestID),
 				zap.String("Method", r.Method),
 				zap.String("URL", r.URL.String()),
 			)
 
-			ctx := context.WithValue(r.Context(), loggerKey, logger) //nolint:staticcheck // not needed
+			ctx := l.InContext(r.Context())
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
@@ -55,10 +49,6 @@ func Logger(l *logger.Logger) Middleware {
 func Recovery() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if strings.HasPrefix(r.URL.Path, "/swagger/") {
-				next.ServeHTTP(w, r)
-				return
-			}
 			ctx := r.Context()
 			logger := logger.FromContext(ctx)
 			responseHandler := response.NewHTTPResponseHandler(logger, w)
@@ -80,10 +70,6 @@ func Recovery() Middleware {
 func Trace() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if strings.HasPrefix(r.URL.Path, "/swagger/") {
-				next.ServeHTTP(w, r)
-				return
-			}
 			ctx := r.Context()
 			logger := logger.FromContext(ctx)
 

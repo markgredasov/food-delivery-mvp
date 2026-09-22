@@ -7,7 +7,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
-func (s *service) GetMenu(ctx context.Context, restaurantID uuid.UUID) ([]menu.MenuItem, error) {
+func (s *Service) GetMenu(ctx context.Context, restaurantID uuid.UUID) ([]menu.MenuItem, error) {
 	if _, err := s.restaurant.GetByID(ctx, restaurantID.String()); err != nil {
 		return nil, err
 	}

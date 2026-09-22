@@ -15,7 +15,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (s *service) CreateOrder(ctx context.Context, in order.Order) (order.Order, error) {
+func (s *Service) CreateOrder(ctx context.Context, in order.Order) (order.Order, error) {
 	var created order.Order
 	err := s.tx.WithTx(ctx, func(ctx context.Context) error {
 		rest, err := s.restaurants.GetByID(ctx, in.RestaurantID.String())
@@ -54,7 +54,7 @@ func (s *service) CreateOrder(ctx context.Context, in order.Order) (order.Order,
 	return fresh, nil
 }
 
-func (s *service) resolveOrderItems(ctx context.Context, rest restaurant.Restaurant, requested []order.OrderItem) ([]order.OrderItem, error) {
+func (s *Service) resolveOrderItems(ctx context.Context, rest restaurant.Restaurant, requested []order.OrderItem) ([]order.OrderItem, error) {
 	ids := make([]uuid.UUID, len(requested))
 	for i, r := range requested {
 		if r.Quantity <= 0 {
@@ -95,7 +95,7 @@ func (s *service) resolveOrderItems(ctx context.Context, rest restaurant.Restaur
 	return items, nil
 }
 
-func (s *service) pushToRestaurant(ctx context.Context, o order.Order) {
+func (s *Service) pushToRestaurant(ctx context.Context, o order.Order) {
 	log := logger.FromContext(ctx)
 
 	rest, err := s.restaurants.GetByID(ctx, o.RestaurantID.String())

@@ -45,14 +45,14 @@ type Client struct {
 // New builds a Client. perAttemptTimeout bounds a single HTTP call;
 // maxAttempts (>=1) is the total number of tries including the first;
 // backoff is the base delay between attempts (doubled each retry).
-func New(perAttemptTimeout time.Duration, maxAttempts int, backoff time.Duration) *Client {
-	if maxAttempts < 1 {
-		maxAttempts = 1
+func New(cfg Config) *Client {
+	if cfg.MaxAttempts < 1 {
+		cfg.MaxAttempts = 1
 	}
 	return &Client{
-		httpClient:  &http.Client{Timeout: perAttemptTimeout},
-		maxAttempts: maxAttempts,
-		backoff:     backoff,
+		httpClient:  &http.Client{Timeout: cfg.PerAttemptTimeout},
+		maxAttempts: cfg.MaxAttempts,
+		backoff:     cfg.Backoff,
 	}
 }
 

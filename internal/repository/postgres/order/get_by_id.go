@@ -13,7 +13,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
 )
 
-func (r *repository) GetByID(ctx context.Context, id uuid.UUID) (order.Order, error) {
+func (r *Repository) GetByID(ctx context.Context, id uuid.UUID) (order.Order, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
@@ -42,7 +42,7 @@ func (r *repository) GetByID(ctx context.Context, id uuid.UUID) (order.Order, er
 	return o, nil
 }
 
-func (r *repository) itemsFor(ctx context.Context, q database_postgres.Querier, orderID uuid.UUID) ([]order.OrderItem, error) {
+func (r *Repository) itemsFor(ctx context.Context, q database_postgres.Querier, orderID uuid.UUID) ([]order.OrderItem, error) {
 	sqlQuery := `
 		SELECT oi.id, oi.order_id, oi.menu_item_id, mi.name, oi.quantity, oi.price
 		FROM kitchen.order_items oi

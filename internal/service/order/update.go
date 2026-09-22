@@ -10,13 +10,13 @@ import (
 	"go.uber.org/zap"
 )
 
-func (s *service) AcceptOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID) (order.Order, error) {
+func (s *Service) AcceptOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID) (order.Order, error) {
 	return s.transitionOwnedOrder(ctx, restaurantID, orderID, func(o *order.Order) error {
 		return o.Accept()
 	})
 }
 
-func (s *service) RejectOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, reason string) (order.Order, error) {
+func (s *Service) RejectOrder(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, reason string) (order.Order, error) {
 	log := logger.FromContext(ctx)
 	log.Info("rejected order", zap.String("reason", reason), zap.String("orderID", orderID.String()))
 
@@ -25,7 +25,7 @@ func (s *service) RejectOrder(ctx context.Context, restaurantID uuid.UUID, order
 	})
 }
 
-func (s *service) UpdateStatus(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, statusString string) (order.Order, error) {
+func (s *Service) UpdateStatus(ctx context.Context, restaurantID uuid.UUID, orderID uuid.UUID, statusString string) (order.Order, error) {
 	next, err := order.NewStatus(statusString)
 	if err != nil {
 		return order.Order{}, err
@@ -36,7 +36,7 @@ func (s *service) UpdateStatus(ctx context.Context, restaurantID uuid.UUID, orde
 	})
 }
 
-func (s *service) transitionOwnedOrder(ctx context.Context, restaurantID, orderID uuid.UUID, mutate func(o *order.Order) error) (order.Order, error) {
+func (s *Service) transitionOwnedOrder(ctx context.Context, restaurantID, orderID uuid.UUID, mutate func(o *order.Order) error) (order.Order, error) {
 	o, err := s.orders.GetByID(ctx, orderID)
 	if err != nil {
 		return order.Order{}, err

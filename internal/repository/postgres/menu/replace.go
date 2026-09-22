@@ -8,7 +8,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
-func (r *repository) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, newItems []menu.MenuItem) ([]menu.MenuItem, error) {
+func (r *Repository) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, newItems []menu.MenuItem) ([]menu.MenuItem, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

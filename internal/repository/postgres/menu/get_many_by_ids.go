@@ -8,7 +8,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
-func (r *repository) GetManyByIDs(ctx context.Context, ids []uuid.UUID) ([]menu.MenuItem, error) {
+func (r *Repository) GetManyByIDs(ctx context.Context, ids []uuid.UUID) ([]menu.MenuItem, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

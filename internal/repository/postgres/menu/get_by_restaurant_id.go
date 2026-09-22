@@ -7,7 +7,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
-func (r *repository) ListByRestaurantID(ctx context.Context, restaurantID string) ([]menu.MenuItem, error) {
+func (r *Repository) ListByRestaurantID(ctx context.Context, restaurantID string) ([]menu.MenuItem, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

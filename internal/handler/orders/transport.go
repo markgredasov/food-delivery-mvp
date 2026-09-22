@@ -10,7 +10,7 @@ import (
 	server_http "github.com/markgredasov/food-delivery-mvp/internal/server/http/server"
 )
 
-type handler struct {
+type Handler struct {
 	orders  orderService
 	catalog catalogService
 }
@@ -28,14 +28,14 @@ type catalogService interface {
 	ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, items []menu.MenuItem) ([]menu.MenuItem, error)
 }
 
-func New(orders orderService, catalog catalogService) *handler {
-	return &handler{
+func New(orders orderService, catalog catalogService) *Handler {
+	return &Handler{
 		orders:  orders,
 		catalog: catalog,
 	}
 }
 
-func (h *handler) Routes() []server_http.Route {
+func (h *Handler) Routes() []server_http.Route {
 	return []server_http.Route{
 		{
 			Method:  http.MethodPost,

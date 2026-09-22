@@ -7,6 +7,6 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
-func (s *service) GetRestaurant(ctx context.Context, restaurantID uuid.UUID) (restaurant.Restaurant, error) {
+func (s *Service) GetRestaurant(ctx context.Context, restaurantID uuid.UUID) (restaurant.Restaurant, error) {
 	return s.restaurant.GetByID(ctx, restaurantID.String())
 }

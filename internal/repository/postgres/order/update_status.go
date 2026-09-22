@@ -8,7 +8,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
 )
 
-func (r *repository) UpdateStatus(ctx context.Context, id uuid.UUID, from, to order.Status) error {
+func (r *Repository) UpdateStatus(ctx context.Context, id uuid.UUID, from, to order.Status) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

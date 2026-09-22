@@ -6,12 +6,12 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
-type repository struct {
+type Repository struct {
 	pool database_postgres.Pool
 }
 
-func New(pool database_postgres.Pool) *repository {
-	return &repository{
+func New(pool database_postgres.Pool) *Repository {
+	return &Repository{
 		pool: pool,
 	}
 }

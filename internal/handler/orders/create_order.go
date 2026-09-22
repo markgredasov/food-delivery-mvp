@@ -26,7 +26,7 @@ const UserIDHeaderName = "X-User-ID"
 // @Success 409 {object} response.ErrorResponse "Конфликт"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /orders [post]
-func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

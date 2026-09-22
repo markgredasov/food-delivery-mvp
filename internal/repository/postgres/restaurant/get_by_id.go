@@ -9,7 +9,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/restaurant"
 )
 
-func (r *repository) GetByID(ctx context.Context, restaurantID string) (restaurant.Restaurant, error) {
+func (r *Repository) GetByID(ctx context.Context, restaurantID string) (restaurant.Restaurant, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

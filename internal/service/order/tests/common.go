@@ -37,11 +37,5 @@ func ctxWithTestLogger(t *testing.T) context.Context {
 		t.Fatalf("failed to create test logger: %v", err)
 	}
 
-	t.Cleanup(func() {
-		if err = testLogger.Close(); err != nil {
-			t.Logf("failed to close logger: %v", err)
-		}
-	})
-
 	return context.WithValue(ctx, "logger", testLogger) //nolint:staticcheck // not needed
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/menu"
 )
 
-func (s *service) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, items []menu.MenuItem) ([]menu.MenuItem, error) {
+func (s *Service) ReplaceMenu(ctx context.Context, restaurantID uuid.UUID, items []menu.MenuItem) ([]menu.MenuItem, error) {
 	if _, err := s.restaurant.GetByID(ctx, restaurantID.String()); err != nil {
 		return nil, err
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/markgredasov/food-delivery-mvp/internal/model/order"
 )
 
-func (r *repository) Create(ctx context.Context, o order.Order) error {
+func (r *Repository) Create(ctx context.Context, o order.Order) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

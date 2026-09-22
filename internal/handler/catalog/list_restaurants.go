@@ -16,7 +16,7 @@ import (
 // @Success 200 {object} RestaurantsDTO "Список зведений"
 // @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /restaurants [get]
-func (h *handler) ListRestaurants(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) ListRestaurants(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
 	rh := response.NewHTTPResponseHandler(log, w)

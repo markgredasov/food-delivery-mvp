@@ -23,7 +23,7 @@ env:
   PROJECT_ROOT: '{{.PROJECT_ROOT}}'
 
 tasks:
-  install-golangci-lint:
+  app:install-golangci-lint:
     cmds:
      - |
       [ -f  {{.GOLANGCI_LINT}} ] || {
@@ -34,61 +34,60 @@ tasks:
     status:
       - test -x {{.GOLANGCI_LINT}}
 
-  lint:
-    deps: [ install-golangci-lint ]
+  app:lint:
     cmds:
       - '{{.GOLANGCI_LINT}} run ./... --config=.golangci.yml'
 
-  run:
+  app:run:
     cmds:
       - go run ./cmd/app/main.go
     env:
       LOGGER_LEVEL: '{{.LOGGER_LEVEL}}'
       LOGGER_FOLDER: '{{.LOGGER_FOLDER | default "./out/logs/"}}'
 
-  migrate-create:
+  db:migrate-create:
     requires:
       vars:
         - NAME
     cmds:
       - goose postgres "host={{.POSTGRES_HOST}} user={{.POSTGRES_USER}} database={{.POSTGRES_DB}} password={{.POSTGRES_PASSWORD}} sslmode=disable" -dir {{.PROJECT_ROOT}}/migrations create {{.NAME}} sql
 
-  migrate-status:
+  db:migrate-status:
     cmds:
       - goose postgres "host=${POSTGRES_HOST} user=${POSTGRES_USER} database=${POSTGRES_DB} password=${POSTGRES_PASSWORD} sslmode=disable" -dir ${PROJECT_ROOT}/migrations status
 
-  migrate-up:
+  db:migrate-up:
     cmds:
       - goose postgres "host=${POSTGRES_HOST} user=${POSTGRES_USER} database=${POSTGRES_DB} password=${POSTGRES_PASSWORD} sslmode=disable" -dir ${PROJECT_ROOT}/migrations up
 
-  migrate-down:
+  db:migrate-down:
     cmds:
       - goose postgres "host=${POSTGRES_HOST} user=${POSTGRES_USER} database=${POSTGRES_DB} password=${POSTGRES_PASSWORD} sslmode=disable" -dir ${PROJECT_ROOT}/migrations down
 
-  env-up:
+  db:up:
     cmds:
       - docker compose up -d postgres
 
-  env-down:
+  db:down:
     cmds:
       - docker compose down -v postgres
 
-  swagger:
+  swagger:init:
     cmds:
       - docker compose run --rm swagger init -g cmd/app/main.go -o docs --parseInternal --parseDependency
 
-  tests-unit:
+  tests:unit:
     cmds:
       - go test -v -coverprofile=coverage.out ./internal/... -coverpkg=./internal/...
   
-  coverage:
+  tests:coverage:
     cmds:
       - go tool cover -func=coverage.out
 
-  up:
+  app:build-up:
     cmds:
       - docker compose up -d app restaurant-simulator
 
-  down:
+  app:build-down:
     cmds:
       - docker compose down app restaurant-simulator

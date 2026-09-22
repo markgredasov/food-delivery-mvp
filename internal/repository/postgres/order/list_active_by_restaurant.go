@@ -11,7 +11,7 @@ import (
 
 var activeStatuses = []string{"pending", "sent_to_restaurant", "accepted", "preparing", "ready", "in_delivery"}
 
-func (r *repository) ListActiveByRestaurant(ctx context.Context, restaurantID uuid.UUID) ([]order.Order, error) {
+func (r *Repository) ListActiveByRestaurant(ctx context.Context, restaurantID uuid.UUID) ([]order.Order, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
