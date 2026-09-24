@@ -10,7 +10,6 @@ MVP-агрегатор доставки еды: API для заведений (�
 
 - [Быстрый старт](#быстрый-старт)
 - [Основные сценарии (CJM)](#основные-сценарии-cjm)
-- [Архитектура (C4)](#архитектура-c4)
 - [Схема БД](#схема-бд)
 - [API](#api)
 - [MVP-упрощения](#mvp-упрощения-и-их-обоснование)
@@ -48,27 +47,6 @@ curl http://localhost:8080/api/v1/restaurants
   синхронизация меню → получение заказа (webhook, с fallback через polling) →
   обработка дубликатов → accept/reject → прогресс статусов до
   `delivered`.
-
-## Архитектура (C4)
-
-- [`c4-context.puml`](docs/diagrams/c4-context.puml) — уровень 1 (Context):
-  пользователь, заведение, сервис Авито.Кухня, внешняя система заведения.
-- [`c4-container.puml`](docs/diagrams/c4-container.puml) — уровень 2
-  (Container): API service (Go), PostgreSQL,
-Основной сервис написан в стиле DDD-слоёв:
-
-```
-handler (HTTP, generated ServerInterface)
-   -> service (бизнес-логика, транзакции)
-      -> repository (pgxpool)
-         -> PostgreSQL
-domain (money, address, restaurant, menu, order — сущности и инварианты,
-        не зависят от остальных слоёв)
-```
-
-`restaurant-simulator` — независимый Go-модуль (свой `go.mod`), запускается
-отдельным процессом/контейнером и общается с основным сервисом только по
-HTTP — как это делал бы реальный сторонний интегратор.
 
 ## Схема БД
 
@@ -115,15 +93,6 @@ OpenAPI-спецификация: [`docs/swagger.yaml`](docs/swagger.yaml).
 | POST | `/api/v1/restaurant/orders/{id}/accept` | заведение | принять заказ |
 | POST | `/api/v1/restaurant/orders/{id}/reject` | заведение | отклонить заказ |
 | PATCH | `/api/v1/restaurant/orders/{id}/status` | заведение | продвинуть статус |
-
-Состояния заказа (`internal/domain/order`):
-
-```
-pending ──────────────► sent_to_restaurant ──► accepted ──► preparing ──► ready ──► in_delivery ──► delivered
-   │                            │
-   └──────────► rejected_by_restaurant ◄───────┘
-        (руками заведением, либо автоматически платформой по таймауту)
-```
 
 ## MVP-упрощения и их обоснование
 
